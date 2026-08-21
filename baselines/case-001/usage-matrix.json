@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "caseId": "CASE-001",
+  "caseVersion": 1,
+  "entryRoute": "/pages/Demo",
+  "routes": ["/pages/Demo", "/pages/DemoDetail"],
+  "dsl": [
+    { "feature": "ux.template", "usage": "single rooted template", "evidence": ["src/pages/Demo/index.ux", "src/pages/DemoDetail/index.ux"] },
+    { "feature": "ux.script", "usage": "default VM export with private state and methods", "evidence": ["src/app.ux", "src/pages/Demo/index.ux", "src/pages/DemoDetail/index.ux"] },
+    { "feature": "ux.style.less", "usage": "Less import, variables, arithmetic and mixin", "evidence": ["src/pages/Demo/index.ux", "src/pages/DemoDetail/index.ux", "src/assets/styles/style.less"] }
+  ],
+  "hostComponents": [
+    { "type": "div", "roles": ["page root", "flex container"] },
+    { "type": "text", "roles": ["bound title", "static description"] },
+    { "type": "input", "attributes": { "type": "button" }, "roles": ["click target"] }
+  ],
+  "bindings": [
+    { "route": "/pages/Demo", "state": "title", "target": "text.value", "phase": "initial-only" },
+    { "route": "/pages/DemoDetail", "state": "text", "target": "text.value", "phase": "initial-only" }
+  ],
+  "events": [
+    { "route": "/pages/Demo", "eventType": "click", "handler": "onDetailBtnClick", "effect": "router.push('/pages/DemoDetail')" },
+    { "route": "/pages/DemoDetail", "eventType": "click", "handler": "onWelcomeBtnClick", "effect": "prompt.showToast" }
+  ],
+  "styleAndLayout": ["flex-direction", "justify-content", "align-items", "width", "height", "margin", "font-size", "color", "background-color", "border-radius", "text-align"],
+  "modules": [
+    { "name": "system.router", "manifestDeclared": true, "loaded": true, "called": true, "methods": ["push"] },
+    { "name": "system.prompt", "manifestDeclared": true, "loaded": true, "called": true, "methods": ["showToast"] },
+    { "name": "system.fetch", "manifestDeclared": true, "loaded": true, "called": false, "expectedV1": "deferred facade resolves; no network request" },
+    { "name": "system.shortcut", "manifestDeclared": true, "loaded": false, "called": false }
+  ],
+  "pageControls": [
+    { "route": "/pages/Demo", "method": "setTitleBar", "calledFrom": "onInit", "requiredText": "欢迎体验快应用开发" },
+    { "route": "/pages/Demo", "method": "setMeta", "calledFrom": "onInit when exposed", "title": "快应用示例模版" }
+  ],
+  "outOfScope": [
+    { "feature": "state update", "owner": "CASE-002" },
+    { "feature": "conditional and keyed blocks", "owner": "CASE-002/BLOCK-001" },
+    { "feature": "system.device", "owner": "CAP-DEVICE-001" },
+    { "feature": "CardDemo Widget Runtime", "owner": "post-V1" }
+  ]
+}

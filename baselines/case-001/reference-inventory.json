@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "caseId": "CASE-001",
+  "caseVersion": 1,
+  "referenceOnly": true,
+  "directorySnapshots": [
+    {
+      "path": "build",
+      "snapshotSha256": "9bc2dfc5ea828616526d9689e00a99ba1d097b0d6c7b6464aa2137e616a29cbe",
+      "files": [
+        { "path": "build/CardDemo/index.js", "byteLength": 1578, "sha256": "805ed9223e921ab725f93bc58e7bae75a87b4b7668c271d83d3ea0bbdac33077" },
+        { "path": "build/app.js", "byteLength": 4842, "sha256": "c03f158a2cc9fbdc9eb1f0d42b36e6be84ba216ad597b8fa370136e5841d8580" },
+        { "path": "build/assets/images/logo.png", "byteLength": 3106, "sha256": "637df6d5db5115c774dad7510a20d60cf80feeb55cdcf5b522bb73e0bc557023" },
+        { "path": "build/manifest.json", "byteLength": 1032, "sha256": "a1b7d51db2a93878ee8c58fe588a09666bd3df96efcb6e72685e69034508e3f6" },
+        { "path": "build/pages/Demo/index.js", "byteLength": 2470, "sha256": "facc0b357797d004573c26cf1d2e2739e28d8049e8535f3bd716a55a23931f92" },
+        { "path": "build/pages/DemoDetail/index.js", "byteLength": 2857, "sha256": "6ab929a88b270c59199b6127a928674c090766cf32e62b4623a14be79a9fb97b" },
+        { "path": "build/sitemap.json", "byteLength": 40, "sha256": "f970749f602a5e4330133d794999c872c2882d12b070cedb45839ded9d5b8554" }
+      ]
+    },
+    {
+      "path": "dist/debug",
+      "snapshotSha256": "883227e5dca0ff1da343c3e2948929f456b2bdec6b415811020087823a33bd76",
+      "files": [
+        { "path": "dist/debug/CardDemo/index.js", "byteLength": 22121, "sha256": "7903cd5d6f9fc7e06ecd1568e97dab88d18d617762f61236188768301a70e74a" },
+        { "path": "dist/debug/META-INF/CERT", "byteLength": 3553, "sha256": "a447c61f55213365a14e45995fbf92cc2dac1a98a8c96b6326a2997391a5446c" },
+        { "path": "dist/debug/META-INF/build.txt", "byteLength": 267, "sha256": "de056d7b7378510f8ec925f3f952feda4c202923f004f9ca08c000c0857b4b62" },
+        { "path": "dist/debug/app.js", "byteLength": 36188, "sha256": "01e5bbcc4da1b43b57f17006bcddbcd74668c1625ea879beab18d0bf631ffc67" },
+        { "path": "dist/debug/assets/images/logo.png", "byteLength": 3106, "sha256": "637df6d5db5115c774dad7510a20d60cf80feeb55cdcf5b522bb73e0bc557023" },
+        { "path": "dist/debug/manifest.json", "byteLength": 1506, "sha256": "5722d1a7d6882bdac88167633890d0335dfa51187344326686f14efc8347ca2c" },
+        { "path": "dist/debug/pages/Demo/index.js", "byteLength": 29230, "sha256": "4d34e5d2ac9c4d40811de13332fd5d7b5995f13bbda2b1a0f87764730d0df5be" },
+        { "path": "dist/debug/pages/DemoDetail/index.js", "byteLength": 31024, "sha256": "16bb026ed8aa1b257fefb7dc2809f04a3d6abe8efe6b515233e568970d9f9f6e" },
+        { "path": "dist/debug/sitemap.json", "byteLength": 40, "sha256": "f970749f602a5e4330133d794999c872c2882d12b070cedb45839ded9d5b8554" }
+      ]
+    },
+    {
+      "path": "dist/release",
+      "snapshotSha256": "1e9cba2896c1577dfd4f723009626312bfbcaaf912853f86b1610b53672da4a8",
+      "files": [
+        { "path": "dist/release/CardDemo/index.js", "byteLength": 1578, "sha256": "805ed9223e921ab725f93bc58e7bae75a87b4b7668c271d83d3ea0bbdac33077" },
+        { "path": "dist/release/META-INF/CERT", "byteLength": 3907, "sha256": "aaade9b1143f158523c0cee4198e74f7883bd97e2197f5597eaf99363162a8ca" },
+        { "path": "dist/release/META-INF/build.txt", "byteLength": 267, "sha256": "c20ce1292f26e649db0820be4dfe99d7dcddbde432fd9bd290af10cdd491a6bd" },
+        { "path": "dist/release/app.js", "byteLength": 4842, "sha256": "c03f158a2cc9fbdc9eb1f0d42b36e6be84ba216ad597b8fa370136e5841d8580" },
+        { "path": "dist/release/assets/images/logo.png", "byteLength": 3106, "sha256": "637df6d5db5115c774dad7510a20d60cf80feeb55cdcf5b522bb73e0bc557023" },
+        { "path": "dist/release/manifest.json", "byteLength": 1032, "sha256": "a1b7d51db2a93878ee8c58fe588a09666bd3df96efcb6e72685e69034508e3f6" },
+        { "path": "dist/release/pages/Demo/index.js", "byteLength": 2470, "sha256": "facc0b357797d004573c26cf1d2e2739e28d8049e8535f3bd716a55a23931f92" },
+        { "path": "dist/release/pages/DemoDetail/index.js", "byteLength": 2857, "sha256": "6ab929a88b270c59199b6127a928674c090766cf32e62b4623a14be79a9fb97b" },
+        { "path": "dist/release/sitemap.json", "byteLength": 40, "sha256": "f970749f602a5e4330133d794999c872c2882d12b070cedb45839ded9d5b8554" }
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "path": "dist/com.example.case1.debug.1.0.0.rpk",
+      "kind": "alliance-rpk",
+      "byteLength": 42445,
+      "sha256": "889496f65db92262e391b16628d4f29871f40a25aa5f15deaf7b6cb7d7d9ce80",
+      "buildMetadata": { "originType": "quickapp-ide", "toolkit": "2.1.0", "timeStamp": "2026-07-25T15:51:37.256Z", "node": "v22.17.0", "platform": "darwin", "arch": "arm64" },
+      "members": [
+        { "path": "META-INF/", "byteLength": 0 }, { "path": "META-INF/CERT", "byteLength": 3553 }, { "path": "manifest.json", "byteLength": 1506 }, { "path": "app.js", "byteLength": 36188 }, { "path": "pages/", "byteLength": 0 }, { "path": "pages/Demo/", "byteLength": 0 }, { "path": "pages/Demo/index.js", "byteLength": 29230 }, { "path": "CardDemo/", "byteLength": 0 }, { "path": "CardDemo/index.js", "byteLength": 22121 }, { "path": "assets/", "byteLength": 0 }, { "path": "assets/images/", "byteLength": 0 }, { "path": "assets/images/logo.png", "byteLength": 3106 }, { "path": "pages/DemoDetail/", "byteLength": 0 }, { "path": "pages/DemoDetail/index.js", "byteLength": 31024 }, { "path": "sitemap.json", "byteLength": 40 }, { "path": "META-INF/build.txt", "byteLength": 267 }
+      ]
+    },
+    {
+      "path": "dist/com.example.case1.release.development.1.0.0.rpk",
+      "kind": "alliance-rpk",
+      "byteLength": 17992,
+      "sha256": "0923f82af7ceeedc1852e4b06550263a0f8df53e347c2faf789e33979cf585df",
+      "buildMetadata": { "originType": "quickapp-ide", "toolkit": "2.1.0", "timeStamp": "2026-07-25T15:51:49.156Z", "node": "v22.17.0", "platform": "darwin", "arch": "arm64" },
+      "members": [
+        { "path": "META-INF/", "byteLength": 0 }, { "path": "META-INF/CERT", "byteLength": 3907 }, { "path": "manifest.json", "byteLength": 1032 }, { "path": "app.js", "byteLength": 4842 }, { "path": "pages/", "byteLength": 0 }, { "path": "pages/Demo/", "byteLength": 0 }, { "path": "pages/Demo/index.js", "byteLength": 2470 }, { "path": "CardDemo/", "byteLength": 0 }, { "path": "CardDemo/index.js", "byteLength": 1578 }, { "path": "assets/", "byteLength": 0 }, { "path": "assets/images/", "byteLength": 0 }, { "path": "assets/images/logo.png", "byteLength": 3106 }, { "path": "pages/DemoDetail/", "byteLength": 0 }, { "path": "pages/DemoDetail/index.js", "byteLength": 2857 }, { "path": "sitemap.json", "byteLength": 40 }, { "path": "META-INF/build.txt", "byteLength": 267 }
+      ]
+    },
+    {
+      "path": "dist/com.example.case1.debug.1.0.0.rpks",
+      "kind": "alliance-rpks",
+      "byteLength": 50264,
+      "sha256": "06e7659f13514d533761128b615b4dfe6a641abcb45b0ad813c09e74f7fc845e",
+      "buildMetadata": { "originType": "quickapp-ide", "toolkit": "2.1.0", "timeStamp": "2026-07-25T15:51:37.256Z", "node": "v22.17.0", "platform": "darwin", "arch": "arm64" },
+      "members": [
+        { "path": "com.example.case1.base.srpk", "byteLength": 37304 }, { "path": "com.example.case1_CardDemo.rpk", "byteLength": 15080 }
+      ]
+    },
+    {
+      "path": "dist/com.example.case1.release.development.1.0.0.rpks",
+      "kind": "alliance-rpks",
+      "byteLength": 45406,
+      "sha256": "1e5aa10694b691fcfb5ee929c31beb6c4a1674d952ddc35d200b1937f97694e3",
+      "buildMetadata": { "originType": "quickapp-ide", "toolkit": "2.1.0", "timeStamp": "2026-07-25T15:51:49.156Z", "node": "v22.17.0", "platform": "darwin", "arch": "arm64" },
+      "members": [
+        { "path": "com.example.case1.rpk", "byteLength": 17992 }, { "path": "com.example.case1.base.srpk", "byteLength": 16788 }, { "path": "com.example.case1_CardDemo.rpk", "byteLength": 11657 }
+      ]
+    }
+  ],
+  "verifiedShape": {
+    "appBundle": { "path": "build/app.js", "moduleId": "@app-application/app", "contains": ["VM", "manifest", "style", "$app_define$", "$app_bootstrap$", "$app_require$"] },
+    "pageBundles": [
+      { "path": "build/pages/Demo/index.js", "moduleId": "@app-component/index", "contains": ["VM", "template", "style", "$app_define$", "$app_bootstrap$"] },
+      { "path": "build/pages/DemoDetail/index.js", "moduleId": "@app-component/index", "contains": ["VM", "template", "style", "$app_define$", "$app_bootstrap$"] }
+    ],
+    "quickAppKitRuntimeMetadataPresent": false,
+    "quickAppKitPageIrPresent": false
+  }
+}

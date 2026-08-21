@@ -1,0 +1,15 @@
+{
+  "package": "com.example.binding001",
+  "name": "binding001",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "router": {
+    "entry": "pages/Binding",
+    "pages": {
+      "pages/Binding": {
+        "component": "index"
+      }
+    }
+  }
+}

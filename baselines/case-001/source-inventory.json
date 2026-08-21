@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "caseId": "CASE-001",
+  "caseVersion": 1,
+  "projectRoot": "quickapp-code-test1",
+  "snapshotAlgorithm": "Sort UTF-8 relative paths by byte order; for each file append '<lowercase-sha256>  <relative-path>\\n'; SHA-256 the complete UTF-8 manifest.",
+  "snapshotSha256": "aa99ea04873aa3fa22a006b37dada4608b06d903fed90370b117074a3834e78a",
+  "files": [
+    { "path": "package-lock.json", "byteLength": 123991, "sha256": "b08e2392cb4d381d05c309db7106e1a8c3b6d8dcc4b5a912b951583937d2b317" },
+    { "path": "package.json", "byteLength": 1530, "sha256": "72b5fab41ba80764a8f54aa77ff00faae4986e76433c49a10ff4c4ca57e12cd4" },
+    { "path": "src/CardDemo/index.ux", "byteLength": 491, "sha256": "4b79334cf184abfe00af20edff757b9529c8b05b5d0ca46ddcaeaaf5d4c7a644" },
+    { "path": "src/app.ux", "byteLength": 372, "sha256": "b63c00f01ba247dc885d2cea4fd3d67c7f88fb2846ab4cb3a60c0f2e01fdb389" },
+    { "path": "src/assets/images/logo.png", "byteLength": 3106, "sha256": "637df6d5db5115c774dad7510a20d60cf80feeb55cdcf5b522bb73e0bc557023" },
+    { "path": "src/assets/styles/mixins.less", "byteLength": 127, "sha256": "bd80c33716fa0dd4179d39df30f66d3c531e0d1a684b68ec3237c3aa510224a7" },
+    { "path": "src/assets/styles/style.less", "byteLength": 53, "sha256": "727925749b760eeec01dff9108d5af23deac15339690957df157721302d9512b" },
+    { "path": "src/assets/styles/variables.less", "byteLength": 120, "sha256": "033be6c23b7772107dd946c5c582978c733cd32560491d7d2ae9bbdbb607940c" },
+    { "path": "src/helper/ajax.js", "byteLength": 2196, "sha256": "d33aa6c91afdfc2ff7f4f631bbef6c1929a6dd766dfb572af7410fbe85b48e12" },
+    { "path": "src/helper/apis/example.js", "byteLength": 589, "sha256": "c9a4ec41773a8a009a74021cf8995508102e0876da2c5f655eeb2e58f79c25f6" },
+    { "path": "src/helper/apis/index.js", "byteLength": 285, "sha256": "399164b5391192b5ee04c048c1e78c9be66508f3b973c156fc4313b32c00fd1e" },
+    { "path": "src/helper/utils.js", "byteLength": 603, "sha256": "5ea4029aa9e86550969cc11881f33344ee0ec184540a1f814375c786b1e59dea" },
+    { "path": "src/manifest.json", "byteLength": 1269, "sha256": "478545f2a60f6d029e13dedaf5ea62c6c4d7a2a4c94090739ab026d5002fe203" },
+    { "path": "src/pages/Demo/index.ux", "byteLength": 1919, "sha256": "d3a77297c203b647f0f6ddd8557b8d5c7eea8e9d1b0ede165b944eb0f6ae18fb" },
+    { "path": "src/pages/DemoDetail/index.ux", "byteLength": 1530, "sha256": "6baa18418998e94bc7be4b184144c1a03121f977375003a49b401c899884d589" },
+    { "path": "src/sitemap.json", "byteLength": 51, "sha256": "38918cc23873ea5f0279d65e6b93c1b48a09e31cc93bff11fca3342e2e372eff" }
+  ],
+  "excluded": [
+    { "pattern": "node_modules/**", "reason": "installed dependencies are not Case source identity" },
+    { "pattern": "build/**", "reason": "alliance build output is Reference Fact" },
+    { "pattern": "dist/**", "reason": "alliance package output is Reference Fact" },
+    { "pattern": "sign/**", "reason": "credentials are never source identity; private key content must not enter evidence" },
+    { "pattern": ".ide/**", "reason": "editor-local state" },
+    { "pattern": ".quickapp.preview.json", "reason": "machine-local preview state" },
+    { "pattern": "scripts/**", "reason": "generation and formatting helpers are not read by the frozen build command" }
+  ]
+}

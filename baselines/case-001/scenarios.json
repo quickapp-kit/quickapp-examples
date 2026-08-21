@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "caseId": "CASE-001",
+  "caseVersion": 1,
+  "sourceSnapshotSha256": "aa99ea04873aa3fa22a006b37dada4608b06d903fed90370b117074a3834e78a",
+  "runtimeInput": "QuickApp Kit Runtime RPK built from the frozen Source snapshot",
+  "referencePackagesExecutableByRuntime": false,
+  "locatorPolicy": "semantic role, route and exact visible text; never platform coordinates or native object identity",
+  "visibleTextComparison": "compare Unicode text after collapsing template formatting whitespace and trimming both ends",
+  "scenarios": [
+    {
+      "id": "S1",
+      "name": "launch-root",
+      "precondition": "new AppRuntime with no Surface",
+      "action": { "type": "launch", "route": "/pages/Demo" },
+      "waitFor": "surface.create.presented",
+      "visibleAssertions": ["text:欢迎体验快应用开发", "button:跳转到详情页", "titleBar:欢迎体验快应用开发"],
+      "lifecycleOrder": ["app.onCreate", "Demo.onInit", "Demo.initialEvaluation", "Demo.onReady", "Demo.present", "app.onShow", "Demo.onShow"],
+      "traceRequired": ["package.open.started", "package.verified", "module.load.started", "module.load.completed", "lifecycle.hook.started", "lifecycle.hook.completed", "surface.create.accepted", "render.transaction.submitted", "mount.transaction.submitted", "mount.transaction.completed", "platform.present.requested", "platform.present.completed", "surface.create.presented"],
+      "endState": { "route": "/pages/Demo", "visibleSurfaces": 1 }
+    },
+    {
+      "id": "S2",
+      "name": "push-detail",
+      "precondition": "S1 completed; Demo visible",
+      "action": { "type": "click", "target": { "role": "button", "text": "跳转到详情页" }, "count": 1 },
+      "waitFor": "navigation.push.presented",
+      "visibleAssertions": [
+        "text:快应用是什么？",
+        "text:快应用是移动互联网新型应用生态，与手机系统深度整合，为用户提供更加场景化的体验。具备传统APP完整的应用体验，但无需安装、即点即用。",
+        "text:标准是由主流手机厂商组成的快应用联盟联合制定。其标准的诞生将在研发接口、能力接入、开发者服务等层面建设标准平台，以平台化的生态模式对个人开发者和企业开发者全品类开放",
+        "button:欢迎使用"
+      ],
+      "causality": { "requestId": "one Platform input RequestId is preserved through input and Handler dispatch", "inputCount": 1, "handlerCount": 1 },
+      "lifecycleOrder": ["Demo.click", "DemoDetail.onInit", "DemoDetail.initialEvaluation", "DemoDetail.onReady", "DemoDetail.present", "Demo.onHide", "DemoDetail.onShow"],
+      "traceRequired": ["event.input.captured", "event.handler.started", "event.handler.completed", "capability.requested", "capability.completed", "navigation.push.accepted", "navigation.push.presented"],
+      "endState": { "route": "/pages/DemoDetail", "visibleSurfaces": 1, "hiddenRoutes": ["/pages/Demo"] }
+    },
+    {
+      "id": "S3",
+      "name": "show-toast",
+      "precondition": "S2 completed; DemoDetail visible",
+      "action": { "type": "click", "target": { "role": "button", "text": "欢迎使用" }, "count": 1 },
+      "waitFor": "system.prompt.showToast completed",
+      "visibleAssertions": ["toast:快应用：复杂生活的简单答案，让生活更顺畅"],
+      "causality": { "requestId": "one Platform input RequestId is preserved through input and Handler dispatch", "inputCount": 1, "handlerCount": 1, "toastCount": 1 },
+      "traceRequired": ["event.input.captured", "event.handler.started", "event.handler.completed", "capability.requested", "capability.completed"],
+      "traceForbidden": ["navigation.push.accepted", "navigation.push.presented"],
+      "endState": { "route": "/pages/DemoDetail", "stackChanged": false }
+    },
+    {
+      "id": "S4",
+      "name": "back-to-root",
+      "precondition": "S3 completed; DemoDetail is non-root visible top",
+      "action": { "type": "platformBack", "count": 1 },
+      "waitFor": "typed NavigationClose result and DemoDetail destruction completed",
+      "visibleAssertions": ["text:欢迎体验快应用开发", "button:跳转到详情页"],
+      "lifecycleOrder": ["DemoDetail.onHide", "DemoDetail.onDestroy", "Demo.onShow"],
+      "traceRequired": ["lifecycle.hook.started", "lifecycle.hook.completed", "surface.destroy.started", "surface.destroy.completed"],
+      "traceRule": "Observation Catalog has no close-specific navigation marker; do not invent one.",
+      "resourceAssertions": ["DemoDetail Handler is not routable", "DemoDetail Runtime Nodes are released", "DemoDetail Host mappings are released"],
+      "endState": { "route": "/pages/Demo", "visibleSurfaces": 1, "rootPopped": false }
+    },
+    {
+      "id": "S5",
+      "name": "destroy-app-runtime",
+      "precondition": "S4 completed; Demo visible",
+      "action": { "type": "destroyAppRuntime", "count": 1 },
+      "waitFor": "RuntimeLifecycleControl completed(destroyed)",
+      "lifecycleOrder": ["Demo.onHide", "app.onHide", "Demo.onDestroy", "app.onDestroy"],
+      "traceRequired": ["lifecycle.hook.started", "lifecycle.hook.completed", "surface.destroy.started", "surface.destroy.completed", "runtime.counter.sampled"],
+      "resourceAssertions": ["runtime.node.live returns to pre-run baseline", "handler.live returns to pre-run baseline", "surface.live returns to pre-run baseline", "late input cannot execute a Handler"],
+      "endState": { "appRuntime": "destroyed", "visibleSurfaces": 0 }
+    }
+  ],
+  "crossPlatform": {
+    "platforms": ["LVGL/SDL", "Android", "iOS"],
+    "mustShare": ["sourceSnapshotSha256", "quickAppKitArtifactSha256", "scenario IDs and actions"],
+    "mustMatch": ["route sequence", "visible text", "button semantics", "event and Toast counts", "Lifecycle partial order", "resource release semantics", "typed error class"],
+    "allowedDifferences": ["font glyph and antialiasing", "system title bar and Toast appearance", "viewport-dependent numeric layout", "clock-domain timestamps and performance values"]
+  }
+}
