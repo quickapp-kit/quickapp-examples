@@ -1,0 +1,28 @@
+<template>
+  <div class="page">
+    <text class="title">媒体预览</text>
+    <video class="video" src="https://example.invalid/quickapp-kit/demo.mp4" poster="assets/images/media-poster.png" controls="true" muted="true" autoplay="false" onprepared="onPrepared" onstart="onStart" onpause="onPause" onfinish="onFinish" onerror="onError" ontimeupdate="onTimeUpdate"></video>
+    <text class="status">Video contract: src / poster / controls / muted</text>
+    <text class="status">Lifecycle: prepared / start / pause / finish</text>
+    <text class="status">Clock: timeupdate / error</text>
+  </div>
+</template>
+
+<script>
+export default {
+  private: { status: 'waiting' },
+  onPrepared() { this.status = 'prepared' },
+  onStart() { this.status = 'start' },
+  onPause() { this.status = 'pause' },
+  onFinish() { this.status = 'finish' },
+  onError() { this.status = 'error' },
+  onTimeUpdate() { this.status = 'timeupdate' },
+}
+</script>
+
+<style>
+.page { width: 280px; height: 420px; padding: 18px 16px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 18px 4px; font-size: 24px; color: #111111; }
+.video { width: 248px; height: 150px; margin: 4px; background-color: #20252b; border-radius: 8px; }
+.status { margin: 8px 4px 0 4px; font-size: 12px; color: #555555; }
+</style>

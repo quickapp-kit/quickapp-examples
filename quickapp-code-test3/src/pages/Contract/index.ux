@@ -1,0 +1,52 @@
+<template>
+  <div class="page">
+    <text class="count">{{ count }}</text>
+    <input type="button" value="更新状态" onclick="onUpdate" />
+
+    <div for="{{ (index, item) in items }}" tid="id">
+      <text>{{ item.label }}</text>
+      <input type="button" value="触发" onclick="onItem" />
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  private: {
+    count: 0,
+    phase: 0,
+    items: [
+      { id: 'a', label: 'A' },
+      { id: 'b', label: 'B' },
+    ],
+  },
+
+  onUpdate() {
+    if (this.phase === 0) {
+      this.phase = 1
+      this.items = [this.items[0], this.items[1], { id: 'c', label: 'C' }]
+    } else if (this.phase === 1) {
+      this.phase = 2
+      this.items = [this.items[0], this.items[2]]
+    } else if (this.phase === 2) {
+      this.phase = 3
+      this.items = [this.items[0], { id: 'b', label: 'B' }, this.items[1]]
+    }
+  },
+
+  onItem() {
+  },
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+}
+
+.count {
+  color: #000000;
+  font-size: 30px;
+}
+</style>

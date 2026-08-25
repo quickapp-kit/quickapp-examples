@@ -1,0 +1,68 @@
+<template>
+  <div class="safe-page">
+    <text class="title">今日摘要</text>
+    <text class="summary">{{ summary }}</text>
+    <input class="action" type="button" value="同步状态" onclick="onRefresh" />
+    <text if="{{ syncing }}" class="state">同步中</text>
+    <div class="signals">
+      <image class="signal" src="assets/images/task-main.png" />
+      <image class="signal" src="assets/images/task-review.png" />
+      <text class="signal-text">今日任务</text>
+    </div>
+    <div class="task" for="{{ (index, item) in items }}" tid="id">
+      <image class="task-image" src="assets/images/task-main.png" />
+      <text class="task-title">{{ item.title }}</text>
+      <text class="task-status">{{ item.status }}</text>
+      <input class="detail" type="button" value="看" onclick="onDetail" />
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    syncing: false,
+    refreshCount: 0,
+    summary: '3 项 / 0 次同步',
+    items: [
+      { id: 'walkA', title: '步行', status: '完成' },
+      { id: 'waterB', title: '饮水', status: '待做' },
+      { id: 'restC', title: '休息', status: '提醒' },
+    ],
+  },
+
+  onRefresh() {
+    this.refreshCount += 1
+    this.syncing = !this.syncing
+    if (this.refreshCount % 2 === 1) this.items = [this.items[1], this.items[2], this.items[0]]
+    else this.items = [this.items[2], this.items[0], this.items[1]]
+    this.summary = '3 项 / ' + this.refreshCount + ' 次同步'
+    prompt.showToast({ message: '状态已同步', duration: 0 })
+  },
+
+  onDetail(event) {
+    const handler = String(event && event.handlerId)
+    if (handler.endsWith('-waterB')) globalThis.__qak_wearable_selection__ = 'waterB'
+    else if (handler.endsWith('-restC')) globalThis.__qak_wearable_selection__ = 'restC'
+    else globalThis.__qak_wearable_selection__ = 'walkA'
+    router.push({ uri: '/pages/Detail' })
+  },
+}
+</script>
+
+<style>
+.safe-page { width: 220px; height: 220px; padding: 10px 10px 10px 10px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 2px 2px 2px 2px; font-size: 22px; color: #111111; }
+.summary, .state, .signal-text { margin: 2px 2px 2px 2px; font-size: 12px; color: #555555; }
+.action { width: 150px; height: 30px; margin: 3px 3px 3px 3px; border-radius: 6px; background-color: #2774c7; color: #ffffff; }
+.signals { width: 190px; height: 32px; margin: 2px 2px 2px 2px; flex-direction: row; align-items: center; background-color: #f7f8f8; }
+.signal { width: 20px; height: 20px; margin: 2px 2px 2px 2px; }
+.signal-text { margin-left: 5px; }
+.task { width: 190px; height: 34px; margin: 2px 2px 2px 2px; padding: 2px 4px 2px 4px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 5px; }
+.task-image { width: 24px; height: 24px; margin: 2px 5px 2px 2px; }
+.task-title, .task-status { margin-left: 3px; font-size: 13px; color: #222222; }
+.detail { width: 36px; height: 24px; border-radius: 4px; background-color: #00a800; color: #ffffff; }
+</style>

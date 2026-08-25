@@ -10,6 +10,9 @@
       "name": "system.prompt"
     },
     {
+      "name": "system.device"
+    },
+    {
       "name": "system.router"
     },
     {
@@ -41,7 +44,7 @@
     "widgets": {
       "CardDemo": {
         "name": "CardDemo",
-        "description": "快应用卡片展示",
+        "description": "quickapp 卡片展示",
         "component": "index",
         "path": "/CardDemo",
         "minPlatformVersion": 1032,
@@ -57,7 +60,7 @@
     "titleBarTextColor": "#414141",
     "pages": {
       "pages/Demo": {
-        "titleBarText": "快应用示例模版"
+        "titleBarText": "quickapp 示例模版"
       },
       "pages/DemoDetail": {
         "titleBarText": "详情页"

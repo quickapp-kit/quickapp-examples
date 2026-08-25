@@ -1,0 +1,76 @@
+<template>
+  <div class="page">
+    <text class="eyebrow">QUICKAPP KIT / B4</text>
+    <text class="title">平台能力</text>
+    <text class="summary">Typed Feature Provider 示例</text>
+    <text class="state">{{ state }}</text>
+    <input class="action" type="button" value="提示" onclick="onPrompt" />
+    <input class="action" type="button" value="读取本地状态" onclick="onFile" />
+    <input class="action" type="button" value="请求本地数据" onclick="onFetch" />
+    <div class="note" if="{{ hasResult }}">
+      <text class="note-title">最近一次结果</text>
+      <text class="note-body">{{ result }}</text>
+    </div>
+  </div>
+</template>
+
+<script>
+import prompt from '@system.prompt'
+import fetch from '@system.fetch'
+import file from '@system.file'
+
+export default {
+  private: {
+    state: '等待操作',
+    result: '',
+    hasResult: false,
+  },
+
+  onPrompt() {
+    prompt.confirm({ message: '启用本次平台能力？' }).then(confirmed => {
+      this.state = confirmed ? '已确认' : '已取消'
+      this.result = confirmed ? 'prompt.completed' : 'prompt.cancelled'
+      this.hasResult = true
+    }).catch(error => {
+      this.state = '提示能力不可用'
+      this.result = String(error && error.code)
+      this.hasResult = true
+    })
+  },
+
+  onFile() {
+    file.read({ path: 'private/platform-state.txt' }).then(value => {
+      this.state = '文件读取完成'
+      this.result = String(value && value.fileData)
+      this.hasResult = true
+    }).catch(error => {
+      this.state = '文件 Provider 返回失败'
+      this.result = String(error && error.code)
+      this.hasResult = true
+    })
+  },
+
+  onFetch() {
+    fetch.fetch({ url: 'local://platform/status', responseType: 'json' }).then(value => {
+      this.state = 'Fetch 完成'
+      this.result = String(value && value.responseBody)
+      this.hasResult = true
+    }).catch(error => {
+      this.state = 'Fetch Provider 返回失败'
+      this.result = String(error && error.code)
+      this.hasResult = true
+    })
+  },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 16px; flex-direction: column; background-color: #ffffff; }
+.eyebrow { margin: 4px; font-size: 12px; color: #2774c7; }
+.title { margin: 4px; font-size: 28px; color: #111111; }
+.summary, .state { margin: 4px; font-size: 14px; color: #555555; }
+.action { width: 250px; height: 42px; margin: 7px 4px 7px 4px; border-radius: 7px; background-color: #2774c7; color: #ffffff; }
+.note { width: 250px; height: 72px; margin: 14px 4px 4px 4px; padding: 8px; background-color: #f2f4f5; flex-direction: column; }
+.note-title { font-size: 13px; color: #333333; }
+.note-body { margin-top: 5px; font-size: 13px; color: #555555; }
+</style>

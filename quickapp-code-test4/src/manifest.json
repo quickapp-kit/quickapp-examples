@@ -1,0 +1,19 @@
+{
+  "package": "com.quickappkit.imageinput.case1",
+  "name": "QuickApp Kit Image Input Case 001",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "icon": "/assets/images/logo.png",
+  "router": {
+    "entry": "pages/ImageInput",
+    "pages": {
+      "pages/ImageInput": { "component": "index" }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/ImageInput": { "titleBarText": "Image/Input" }
+    }
+  }
+}

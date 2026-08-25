@@ -1,0 +1,56 @@
+<template>
+  <div class="page">
+    <text class="title">卡包</text>
+    <text class="summary">选择常用卡片</text>
+    <text if="{{ activeCard }}" class="active">当前：{{ activeCard }}</text>
+    <div class="card" for="{{ (index, item) in cards }}" tid="id">
+      <image class="card-image" src="assets/images/card-door.png" />
+      <text class="card-title">{{ item.title }}</text>
+      <text class="card-meta">{{ item.kind }} / {{ item.status }}</text>
+      <input class="select" type="button" value="选择" onclick="onSelect" />
+    </div>
+    <input class="more" type="button" value="查看卡片详情" onclick="onDetail" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    activeCard: '门卡',
+    cards: [
+      { id: 'doorA', title: '门卡', kind: '家庭', status: '可用' },
+      { id: 'transitB', title: '公交卡', kind: '出行', status: '可用' },
+      { id: 'workC', title: '工卡', kind: '办公', status: '待确认' },
+    ],
+  },
+
+  onSelect(event) {
+    const handler = String(event && event.handlerId)
+    if (handler.endsWith('-transitB')) this.activeCard = '公交卡'
+    else if (handler.endsWith('-workC')) this.activeCard = '工卡'
+    else this.activeCard = '门卡'
+    globalThis.__qak_wallet_selection__ = this.activeCard
+    prompt.showToast({ message: this.activeCard + '已选中', duration: 0 })
+  },
+
+  onDetail() {
+    router.push({ uri: '/pages/Detail' })
+  },
+}
+</script>
+
+<style>
+.page { width: 220px; height: 220px; padding: 8px 8px 6px 8px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 2px 2px 1px 2px; font-size: 22px; color: #111111; }
+.summary, .active { margin: 2px 2px 2px 2px; font-size: 12px; color: #555555; }
+.active { color: #2774c7; }
+.card { width: 190px; height: 34px; margin: 2px 2px 2px 2px; padding: 2px 4px 2px 4px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 5px; }
+.card-image { width: 24px; height: 24px; margin: 2px 5px 2px 2px; }
+.card-title { font-size: 13px; color: #111111; }
+.card-meta { margin-left: 3px; font-size: 11px; color: #555555; }
+.select { width: 40px; height: 24px; border-radius: 4px; background-color: #2774c7; color: #ffffff; }
+.more { width: 150px; height: 28px; margin: 4px 2px 2px 2px; border-radius: 5px; background-color: #00a800; color: #ffffff; }
+</style>

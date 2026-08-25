@@ -1,0 +1,51 @@
+<template>
+  <div class="page detail-page">
+    <image class="hero" src="assets/images/product-main.png" />
+    <text class="title">{{ detailTitle }}</text>
+    <text class="meta">{{ detailMeta }}</text>
+    <text class="price">{{ detailPrice }}</text>
+    <text class="body">精选商品详情已加载，支持真实页面跳转和返回。</text>
+    <input class="action" type="button" value="加入清单" onclick="onAdd" />
+    <input class="back" type="button" value="返回首页" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    detailTitle: '晨光便携灯',
+    detailMeta: '家居 / 热卖',
+    detailPrice: '¥129',
+  },
+
+  onInit() {
+    const selected = globalThis.__qak_commerce_selection__
+    if (selected === 'bagB') {
+      this.detailTitle = '城市通勤包'
+      this.detailMeta = '出行 / 精选'
+      this.detailPrice = '¥299'
+    } else if (selected === 'cupC') {
+      this.detailTitle = '轻量保温杯'
+      this.detailMeta = '生活 / 上新'
+      this.detailPrice = '¥89'
+    }
+  },
+
+  onAdd() { prompt.showToast({ message: '已加入清单', duration: 0 }) },
+  onBack() { router.back() },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 12px 12px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
+.hero { width: 72px; height: 72px; margin: 4px 4px 14px 4px; }
+.title { margin: 4px 4px 8px 4px; font-size: 25px; color: #111111; }
+.meta, .body { margin: 4px 4px 4px 4px; font-size: 15px; color: #555555; }
+.price { margin: 4px 4px 8px 4px; font-size: 22px; color: #d24a3a; }
+.action, .back { width: 220px; height: 40px; margin: 5px 4px 5px 4px; border-radius: 7px; color: #ffffff; }
+.action { background-color: #00a800; }
+.back { background-color: #2774c7; }
+</style>

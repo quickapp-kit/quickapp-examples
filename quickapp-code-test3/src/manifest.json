@@ -1,0 +1,22 @@
+{
+  "package": "com.quickappkit.block.case1",
+  "name": "QuickApp Kit Block Contract Case 001",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "router": {
+    "entry": "pages/Contract",
+    "pages": {
+      "pages/Contract": {
+        "component": "index"
+      }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/Contract": {
+        "titleBarText": "Block Contract"
+      }
+    }
+  }
+}

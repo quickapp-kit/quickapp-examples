@@ -3,10 +3,10 @@
   <div class="wrapper">
     <text class="title">{{ text }}</text>
     <text class="desc"
-      >快应用是移动互联网新型应用生态，与手机系统深度整合，为用户提供更加场景化的体验。具备传统APP完整的应用体验，但无需安装、即点即用。
+      >quickapp 是移动互联网新型应用生态，与手机系统深度整合，为用户提供更加场景化的体验。具备传统APP完整的应用体验，但无需安装、即点即用。
     </text>
     <text class="desc"
-      >标准是由主流手机厂商组成的快应用联盟联合制定。其标准的诞生将在研发接口、能力接入、开发者服务等层面建设标准平台，以平台化的生态模式对个人开发者和企业开发者全品类开放
+      >标准是由主流手机厂商组成的 quickapp 联盟联合制定。其标准的诞生将在研发接口、能力接入、开发者服务等层面建设标准平台，以平台化的生态模式对个人开发者和企业开发者全品类开放
     </text>
     <input
       class="btn"
@@ -18,13 +18,19 @@
 </template>
 
 <script>
+import prompt from '@system.prompt'
+
 export default {
   private: {
-    text: '快应用是什么？',
+    text: 'quickapp 是什么？',
+  },
+
+  onInit() {
+    prompt.showToast({ message: 'quickapp detail ready', duration: 0 })
   },
 
   onWelcomeBtnClick() {
-    $utils.showToast('快应用：复杂生活的简单答案，让生活更顺畅')
+    $utils.showToast('quickapp：复杂生活的简单答案，让生活更顺畅')
   },
 }
 </script>

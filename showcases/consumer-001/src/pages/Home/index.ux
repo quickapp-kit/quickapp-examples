@@ -1,0 +1,75 @@
+<template>
+  <div class="page">
+    <text class="title">今日清单</text>
+    <text class="summary">{{ summary }}</text>
+    <input class="action" type="button" value="刷新内容" onclick="onRefresh" />
+    <text if="{{ refreshing }}" class="state">内容正在更新</text>
+    <div class="signals">
+      <image class="signal" src="assets/images/card-main.png" />
+      <image class="signal" src="assets/images/card-review.png" />
+      <image class="signal" src="assets/images/card-focus.png" />
+      <text class="signal-text">生活 / 工作 / 关注</text>
+    </div>
+    <div class="card" for="{{ (index, item) in items }}" tid="id">
+      <image class="card-image" src="assets/images/card-main.png" />
+      <text class="card-title">{{ item.title }}</text>
+      <text class="card-meta">{{ item.category }}</text>
+      <text class="card-status">{{ item.status }}</text>
+      <text class="card-summary">{{ item.excerpt }}</text>
+      <input class="detail" type="button" value="查看" onclick="onDetail" />
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    refreshCount: 0,
+    refreshing: false,
+    summary: '3 条内容 / 今日第 0 次刷新',
+    items: [
+      { id: 'dailyA', title: '晨间计划', category: '生活', status: '待开始', excerpt: '安排今天的重点事项' },
+      { id: 'workB', title: '发布清单', category: '工作', status: '进行中', excerpt: '检查版本与发布节点' },
+      { id: 'focusC', title: '专注时段', category: '关注', status: '已完成', excerpt: '保留一段不被打扰的时间' },
+    ],
+  },
+
+  onRefresh() {
+    this.refreshCount += 1
+    this.refreshing = !this.refreshing
+    if (this.refreshCount % 2 === 1) {
+      this.items = [this.items[1], this.items[2], this.items[0]]
+    } else {
+      this.items = [this.items[2], this.items[0], this.items[1]]
+    }
+    this.summary = '3 条内容 / 今日第 ' + this.refreshCount + ' 次刷新'
+    prompt.showToast({ message: '内容已刷新', duration: 0 })
+  },
+
+  onDetail(event) {
+    const handler = String(event && event.handlerId)
+    if (handler.endsWith('-workB')) globalThis.__qak_consumer_selection__ = 'workB'
+    else if (handler.endsWith('-focusC')) globalThis.__qak_consumer_selection__ = 'focusC'
+    else globalThis.__qak_consumer_selection__ = 'dailyA'
+    router.push({ uri: '/pages/Detail' })
+  },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 12px 12px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 4px 4px 4px 4px; font-size: 24px; color: #111111; }
+.summary, .state, .signal-text { margin: 3px 3px 3px 3px; font-size: 14px; color: #555555; }
+.action { width: 220px; height: 40px; margin: 4px 4px 6px 4px; border-radius: 8px; background-color: #2774c7; color: #ffffff; }
+.signals { width: 260px; height: 48px; margin: 2px 4px 3px 4px; flex-direction: row; align-items: center; background-color: #f7f8f8; }
+.signal { width: 24px; height: 24px; margin: 3px 3px 3px 3px; }
+.signal-text { margin-left: 6px; }
+.card { width: 260px; height: 78px; margin: 3px 4px 3px 4px; padding: 4px 6px 4px 6px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 6px; }
+.card-image { width: 32px; height: 32px; margin: 4px 7px 4px 3px; }
+.card-title { font-size: 15px; color: #111111; }
+.card-meta, .card-status, .card-summary { margin-left: 4px; font-size: 12px; color: #555555; }
+.detail { width: 58px; height: 26px; border-radius: 5px; background-color: #00a800; color: #ffffff; }
+</style>

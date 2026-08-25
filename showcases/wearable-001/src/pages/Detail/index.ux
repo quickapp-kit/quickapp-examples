@@ -1,0 +1,48 @@
+<template>
+  <div class="safe-page">
+    <image class="image" src="assets/images/task-main.png" />
+    <text class="title">{{ detailTitle }}</text>
+    <text class="status">{{ detailStatus }}</text>
+    <text class="note">{{ detailNote }}</text>
+    <input class="action" type="button" value="返回摘要" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    detailTitle: '步行',
+    detailStatus: '完成',
+    detailNote: '今日步行目标已记录',
+  },
+
+  onInit() {
+    const selected = globalThis.__qak_wearable_selection__
+    if (selected === 'waterB') {
+      this.detailTitle = '饮水'
+      this.detailStatus = '待做'
+      this.detailNote = '下一次提醒将在活动后显示'
+    } else if (selected === 'restC') {
+      this.detailTitle = '休息'
+      this.detailStatus = '提醒'
+      this.detailNote = '建议安排短暂休息'
+    }
+  },
+
+  onBack() {
+    prompt.showToast({ message: '已返回今日摘要', duration: 0 })
+    router.back()
+  },
+}
+</script>
+
+<style>
+.safe-page { width: 220px; height: 220px; padding: 10px 10px 10px 10px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
+.image { width: 40px; height: 40px; margin: 2px 2px 6px 2px; }
+.title { margin: 2px 2px 4px 2px; font-size: 20px; color: #111111; }
+.status, .note { margin: 2px 2px 2px 2px; font-size: 13px; color: #333333; }
+.action { width: 150px; height: 30px; margin: 10px 2px 2px 2px; border-radius: 6px; background-color: #2774c7; color: #ffffff; }
+</style>

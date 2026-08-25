@@ -1,0 +1,39 @@
+<template>
+  <div class="page">
+    <text class="title">AI Agent</text>
+    <image class="image" src="assets/images/product-focus.png" />
+    <text class="summary">你的智能购物助手</text>
+    <text if="{{ ready }}" class="state">助手入口已准备</text>
+    <text class="body">第一版保留真实产品入口，能力 Provider 后续接入。</text>
+    <input class="action" type="button" value="回到首页" onclick="onHome" />
+    <div class="tabs">
+      <input class="tab" type="button" value="首页" onclick="onHome" />
+      <input class="tab" type="button" value="直播" onclick="onLive" />
+      <input class="tab active" type="button" value="AI Agent" onclick="onAgent" />
+      <input class="tab" type="button" value="我的" onclick="onMe" />
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: { ready: true },
+  onHome() { router.push({ uri: '/pages/Home' }) },
+  onLive() { router.push({ uri: '/pages/Live' }) },
+  onAgent() {},
+  onMe() { router.push({ uri: '/pages/Me' }) },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 8px 12px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 16px 4px 14px 4px; font-size: 26px; color: #111111; }
+.image { width: 56px; height: 56px; margin: 4px 4px 12px 4px; }
+.summary, .state, .body { margin: 4px 4px 4px 4px; font-size: 14px; color: #555555; }
+.action { width: 220px; height: 40px; margin: 20px 4px 8px 4px; border-radius: 7px; background-color: #2774c7; color: #ffffff; }
+.tabs { width: 272px; height: 42px; margin: 80px 2px 2px 2px; flex-direction: row; align-items: center; background-color: #f7f8f8; }
+.tab { width: 66px; height: 30px; margin: 2px 1px 2px 1px; border-radius: 4px; background-color: #e2e5e7; color: #333333; }
+.active { background-color: #2774c7; color: #ffffff; }
+</style>

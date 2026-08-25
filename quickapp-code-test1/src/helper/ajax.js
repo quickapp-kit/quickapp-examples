@@ -18,7 +18,7 @@ Promise.prototype.finally = function(callback) {
 }
 
 /**
- * 调用快应用 fetch 接口做网络请求
+ * 调用 quickapp fetch 接口做网络请求
  * @param params
  */
 function fetchPromise(params) {

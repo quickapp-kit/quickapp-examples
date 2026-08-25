@@ -1,0 +1,51 @@
+<template>
+  <div class="page">
+    <text class="title">任务列表</text>
+    <text class="summary">Scroll / List / keyed for</text>
+    <scroll class="viewport" onscroll="onScroll" onscrollend="onScrollEnd" onscrolltop="onScrollTop" onscrollbottom="onScrollBottom">
+      <list class="list">
+        <div class="item" for="{{ (index, item) in tasks }}" tid="id">
+          <image class="icon" src="assets/images/item.png" />
+          <text class="name">{{ item.name }}</text>
+          <text class="status">{{ item.status }}</text>
+          <input class="open" type="button" value="查看" onclick="onOpen" />
+        </div>
+      </list>
+    </scroll>
+    <text if="{{ atBottom }}" class="edge">已到列表底部</text>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: {
+    atBottom: false,
+    tasks: [
+      { id: 't1', name: '巡检设备', status: '进行中' },
+      { id: 't2', name: '同步数据', status: '待处理' },
+      { id: 't3', name: '生成报告', status: '已完成' },
+      { id: 't4', name: '检查网络', status: '待处理' },
+    ],
+  },
+  onScroll() {},
+  onScrollEnd() {},
+  onScrollTop() { this.atBottom = false },
+  onScrollBottom() { this.atBottom = true },
+  onOpen() { router.push({ uri: '/pages/Home' }) },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 520px; padding: 14px 12px 8px 12px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 3px 4px 4px 4px; font-size: 24px; color: #111111; }
+.summary, .edge { margin: 2px 4px 8px 4px; font-size: 12px; color: #2774c7; }
+.viewport { width: 276px; height: 410px; margin: 2px 2px 4px 2px; background-color: #f7f8f8; }
+.list { width: 260px; height: 620px; margin: 4px 8px 4px 8px; flex-direction: column; }
+.item { width: 250px; height: 72px; margin: 4px 4px 4px 4px; padding: 5px 6px 5px 6px; flex-direction: row; align-items: center; background-color: #ffffff; border-radius: 6px; }
+.icon { width: 32px; height: 32px; margin: 3px 8px 3px 3px; }
+.name { font-size: 14px; color: #111111; }
+.status { margin-left: 5px; font-size: 12px; color: #555555; }
+.open { width: 48px; height: 26px; margin-left: 8px; background-color: #2774c7; color: #ffffff; border-radius: 4px; }
+</style>

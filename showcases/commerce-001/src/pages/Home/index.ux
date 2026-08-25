@@ -1,0 +1,67 @@
+<template>
+  <div class="page">
+    <text class="eyebrow">QUICKAPP MARKET</text>
+    <text class="title">好物精选</text>
+    <text class="summary">今日推荐 / 3 件好物</text>
+    <text if="{{ loading }}" class="state">正在更新推荐</text>
+    <div class="product" for="{{ (index, item) in products }}" tid="id">
+      <image class="product-image" src="assets/images/product-main.png" />
+      <text class="product-title">{{ item.title }}</text>
+      <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
+      <text class="product-price">{{ item.price }}</text>
+      <input class="detail" type="button" value="查看商品" onclick="onProduct" />
+    </div>
+    <div class="tabs">
+      <input class="tab active" type="button" value="首页" onclick="onHome" />
+      <input class="tab" type="button" value="直播" onclick="onLive" />
+      <input class="tab" type="button" value="AI Agent" onclick="onAgent" />
+      <input class="tab" type="button" value="我的" onclick="onMe" />
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    loading: false,
+    products: [
+      { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '¥129' },
+      { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '¥299' },
+      { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '¥89' },
+    ],
+  },
+
+  onProduct(event) {
+    const handler = String(event && event.handlerId)
+    if (handler.endsWith('-bagB')) globalThis.__qak_commerce_selection__ = 'bagB'
+    else if (handler.endsWith('-cupC')) globalThis.__qak_commerce_selection__ = 'cupC'
+    else globalThis.__qak_commerce_selection__ = 'lampA'
+    prompt.showToast({ message: '打开商品详情', duration: 0 })
+    router.push({ uri: '/pages/ProductDetail' })
+  },
+
+  onHome() {},
+  onLive() { router.push({ uri: '/pages/Live' }) },
+  onAgent() { router.push({ uri: '/pages/Agent' }) },
+  onMe() { router.push({ uri: '/pages/Me' }) },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 8px 12px; flex-direction: column; background-color: #ffffff; }
+.eyebrow { margin: 2px 4px 2px 4px; font-size: 11px; color: #2774c7; }
+.title { margin: 2px 4px 2px 4px; font-size: 26px; color: #111111; }
+.summary, .state { margin: 3px 4px 3px 4px; font-size: 14px; color: #555555; }
+.product { width: 260px; height: 86px; margin: 3px 4px 3px 4px; padding: 5px 6px 5px 6px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 7px; }
+.product-image { width: 40px; height: 40px; margin: 4px 7px 4px 3px; }
+.product-title { font-size: 15px; color: #111111; }
+.product-meta, .product-price { margin-left: 4px; font-size: 12px; color: #555555; }
+.product-price { color: #d24a3a; }
+.detail { width: 72px; height: 28px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
+.tabs { width: 272px; height: 42px; margin: 8px 2px 2px 2px; flex-direction: row; align-items: center; background-color: #f7f8f8; }
+.tab { width: 66px; height: 30px; margin: 2px 1px 2px 1px; border-radius: 4px; background-color: #e2e5e7; color: #333333; }
+.active { background-color: #2774c7; color: #ffffff; }
+</style>

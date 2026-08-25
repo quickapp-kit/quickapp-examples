@@ -1,0 +1,51 @@
+<template>
+  <div class="page">
+    <image class="image" src="assets/images/card-door.png" />
+    <text class="title">{{ detailTitle }}</text>
+    <text class="meta">{{ detailKind }}</text>
+    <text if="{{ ready }}" class="state">{{ detailStatus }}</text>
+    <text class="body">本地卡包示例，不直接调用 NFC。</text>
+    <input class="action" type="button" value="设为当前卡" onclick="onChoose" />
+    <input class="back" type="button" value="返回卡包" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    ready: true,
+    detailTitle: '门卡',
+    detailKind: '家庭 / 门禁',
+    detailStatus: '可用',
+  },
+
+  onInit() {
+    const selected = globalThis.__qak_wallet_selection__
+    if (selected === '公交卡') {
+      this.detailTitle = '公交卡'
+      this.detailKind = '出行 / 交通'
+    } else if (selected === '工卡') {
+      this.detailTitle = '工卡'
+      this.detailKind = '办公 / 门禁'
+      this.detailStatus = '待确认'
+    }
+  },
+
+  onChoose() { prompt.showToast({ message: this.detailTitle + '已设为当前卡', duration: 0 }) },
+  onBack() { router.back() },
+}
+</script>
+
+<style>
+.page { width: 220px; height: 220px; padding: 8px 8px 6px 8px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
+.image { width: 48px; height: 48px; margin: 2px 2px 7px 2px; }
+.title { margin: 2px 2px 3px 2px; font-size: 21px; color: #111111; }
+.meta, .state, .body { margin: 2px 2px 2px 2px; font-size: 12px; color: #555555; }
+.state { color: #2774c7; }
+.action, .back { width: 150px; height: 28px; margin: 3px 2px 2px 2px; border-radius: 5px; color: #ffffff; }
+.action { background-color: #00a800; }
+.back { background-color: #2774c7; }
+</style>

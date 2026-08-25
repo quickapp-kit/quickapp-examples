@@ -1,0 +1,33 @@
+<template>
+  <div class="page">
+    <text class="title">控件基础</text>
+    <text class="label">用户名</text>
+    <input class="field" type="text" value="QuickApp" oninput="onInput" onchange="onChange" onfocus="onFocus" />
+    <text class="value">输入事件已接入</text>
+    <text class="label">通知开关</text>
+    <switch class="toggle" checked="true" onchange="onSwitch"></switch>
+    <text class="state">Switch change payload: checked</text>
+    <input class="button" type="button" value="刷新状态" onclick="onRefresh" />
+  </div>
+</template>
+
+<script>
+export default {
+  private: { inputValue: 'QuickApp', checked: true },
+  onInput(event) { this.inputValue = event && event.value ? event.value : this.inputValue },
+  onChange(event) { this.inputValue = event && event.value ? event.value : this.inputValue },
+  onFocus() {},
+  onSwitch(event) { this.checked = Boolean(event && event.checked) },
+  onRefresh() {},
+}
+</script>
+
+<style>
+.page { width: 280px; height: 420px; padding: 18px 16px 12px 16px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 22px 4px; font-size: 24px; color: #111111; }
+.label { margin: 5px 4px 4px 4px; font-size: 14px; color: #555555; }
+.field { width: 240px; height: 38px; margin: 2px 4px 8px 4px; background-color: #f2f4f5; color: #111111; border-radius: 5px; }
+.value, .state { margin: 3px 4px 12px 4px; font-size: 12px; color: #2774c7; }
+.toggle { width: 54px; height: 30px; margin: 3px 4px 8px 4px; background-color: #2774c7; border-radius: 15px; }
+.button { width: 180px; height: 36px; margin: 18px 4px 4px 4px; background-color: #00a800; color: #ffffff; border-radius: 6px; }
+</style>

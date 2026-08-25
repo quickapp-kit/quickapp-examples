@@ -1,0 +1,48 @@
+<template>
+  <div class="page">
+    <image class="image" src="assets/images/inspection.png" />
+    <text class="title">{{ detailTitle }}</text>
+    <text class="body">{{ detailStatus }}</text>
+    <text class="body">{{ detailNote }}</text>
+    <input class="action" type="button" value="返回任务看板" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    detailTitle: '一号泵站',
+    detailStatus: '状态：正常',
+    detailNote: '泵站巡检记录已载入',
+  },
+
+  onInit() {
+    const selected = globalThis.__qak_gallery_selection__
+    if (selected === 'valveB') {
+      this.detailTitle = '二号阀组'
+      this.detailStatus = '状态：待复核'
+      this.detailNote = '阀组巡检记录已载入'
+    } else if (selected === 'panelC') {
+      this.detailTitle = '控制面板'
+      this.detailStatus = '状态：异常'
+      this.detailNote = '控制面板需要现场确认'
+    }
+  },
+
+  onBack() {
+    prompt.showToast({ message: '已返回任务看板', duration: 0 })
+    router.back()
+  },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 12px 12px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
+.image { width: 48px; height: 48px; margin: 4px 4px 12px 4px; }
+.title { margin: 4px 4px 8px 4px; font-size: 24px; color: #111111; }
+.body { margin: 4px 4px 4px 4px; font-size: 16px; color: #333333; }
+.action { width: 220px; height: 42px; margin: 16px 4px 4px 4px; border-radius: 8px; background-color: #2774c7; color: #ffffff; }
+</style>

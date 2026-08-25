@@ -9,9 +9,9 @@
 <script>
 export default {
   private: {
-    text: '欢迎使用快应用卡片',
+    text: '欢迎使用 quickapp 卡片',
     des:
-      '卡片是一种轻量级的快应用，快应用卡片使快应用能够在其他app和系统里提供可扩展的app功能'
+      '卡片是一种轻量级的 quickapp，quickapp 卡片使 quickapp 能够在其他 app 和系统里提供可扩展的 app 功能'
   }
 }
 </script>

@@ -1,0 +1,25 @@
+{
+  "package": "com.quickappkit.consumer001",
+  "name": "QuickApp Kit Consumer 001",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "icon": "/assets/images/card-main.png",
+  "features": [
+    { "name": "system.router" },
+    { "name": "system.prompt" }
+  ],
+  "router": {
+    "entry": "pages/Home",
+    "pages": {
+      "pages/Home": { "component": "index" },
+      "pages/Detail": { "component": "index" }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/Home": { "titleBarText": "今日清单" },
+      "pages/Detail": { "titleBarText": "内容详情" }
+    }
+  }
+}

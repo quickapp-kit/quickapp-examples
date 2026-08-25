@@ -47,13 +47,13 @@ target_include_directories(quickapp_case001_lvgl PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl")
 target_link_libraries(quickapp_case001_lvgl PRIVATE
-  quickapp_core_package quickapp_core_render
+  quickapp_core_package quickapp_core_render quickapp_core_features
   quickapp_js_engine_quickjs quickapp_js_engine_api quickapp_js_executor
   quickapp_js_module_loader quickapp_js_static_facades quickapp_js_page_host_control
   quickapp_js_vm_lifecycle quickapp_js_alpha_initial_binding quickapp_js_alpha_initial_render
   quickapp_js_event
   quickapp_js_alpha_page_stage
-  quickapp_lvgl_mount_host quickapp_lvgl_font_measure
+  quickapp_lvgl_mount_host quickapp_lvgl_feature_provider quickapp_lvgl_font_measure
   quickapp_lvgl_sdl_backends lvgl::lvgl PkgConfig::SDL3)
 target_compile_definitions(quickapp_case001_lvgl PRIVATE CONFIG_LV_USE_SDL=1)
 
@@ -69,13 +69,13 @@ target_include_directories(quickapp_lvgl_simulator PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl")
 target_link_libraries(quickapp_lvgl_simulator PRIVATE
-  quickapp_core_package quickapp_core_render
+  quickapp_core_package quickapp_core_render quickapp_core_features
   quickapp_js_engine_quickjs quickapp_js_engine_api quickapp_js_executor
   quickapp_js_module_loader quickapp_js_static_facades quickapp_js_page_host_control
   quickapp_js_vm_lifecycle quickapp_js_alpha_initial_binding quickapp_js_alpha_initial_render
   quickapp_js_event
   quickapp_js_alpha_page_stage
-  quickapp_lvgl_mount_host quickapp_lvgl_font_measure
+  quickapp_lvgl_mount_host quickapp_lvgl_feature_provider quickapp_lvgl_font_measure
   quickapp_lvgl_sdl_backends lvgl::lvgl PkgConfig::SDL3)
 target_compile_definitions(quickapp_lvgl_simulator PRIVATE
   CONFIG_LV_USE_SDL=1

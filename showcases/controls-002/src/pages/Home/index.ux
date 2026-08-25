@@ -1,0 +1,31 @@
+<template>
+  <div class="page">
+    <text class="title">选择控件</text>
+    <text class="label">音量 Slider</text>
+    <slider class="slider" min="0" max="100" step="5" value="40" onchange="onSlider"></slider>
+    <text class="readout">Slider change: value / isFromUser</text>
+    <text class="label">模式 Picker</text>
+    <picker class="picker" mode="text" range="安静|标准|性能" selected="1" onchange="onPicker"></picker>
+    <text class="readout">Picker change: selected / value</text>
+    <input class="button" type="button" value="完成" onclick="onDone" />
+  </div>
+</template>
+
+<script>
+export default {
+  private: { volume: 40, mode: 1 },
+  onSlider(event) { this.volume = Number(event && event.value) || this.volume },
+  onPicker(event) { this.mode = Number(event && event.selected) || this.mode },
+  onDone() {},
+}
+</script>
+
+<style>
+.page { width: 280px; height: 420px; padding: 18px 16px 12px 16px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 22px 4px; font-size: 24px; color: #111111; }
+.label { margin: 6px 4px 5px 4px; font-size: 14px; color: #555555; }
+.slider { width: 240px; height: 36px; margin: 4px 4px 8px 4px; }
+.picker { width: 240px; height: 38px; margin: 4px 4px 8px 4px; background-color: #f2f4f5; color: #111111; border-radius: 5px; }
+.readout { margin: 2px 4px 16px 4px; font-size: 12px; color: #2774c7; }
+.button { width: 180px; height: 36px; margin: 18px 4px 4px 4px; background-color: #00a800; color: #ffffff; border-radius: 6px; }
+</style>

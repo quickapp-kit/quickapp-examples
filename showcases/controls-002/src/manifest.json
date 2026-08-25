@@ -1,0 +1,10 @@
+{
+  "package": "com.quickappkit.controls002",
+  "name": "QuickApp Kit Controls 002",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "features": [{ "name": "system.router" }],
+  "router": { "entry": "pages/Home", "pages": { "pages/Home": { "component": "index" } } },
+  "display": { "pages": { "pages/Home": { "titleBarText": "选择控件" } } }
+}

@@ -1,0 +1,48 @@
+<template>
+  <div class="page">
+    <image class="image" src="assets/images/card-main.png" />
+    <text class="title">{{ detailTitle }}</text>
+    <text class="meta">{{ detailCategory }}</text>
+    <text class="body">{{ detailSummary }}</text>
+    <input class="action" type="button" value="返回清单" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+
+export default {
+  private: {
+    detailTitle: '晨间计划',
+    detailCategory: '生活 / 待开始',
+    detailSummary: '安排今天的重点事项',
+  },
+
+  onInit() {
+    const selected = globalThis.__qak_consumer_selection__
+    if (selected === 'workB') {
+      this.detailTitle = '发布清单'
+      this.detailCategory = '工作 / 进行中'
+      this.detailSummary = '检查版本与发布节点'
+    } else if (selected === 'focusC') {
+      this.detailTitle = '专注时段'
+      this.detailCategory = '关注 / 已完成'
+      this.detailSummary = '保留一段不被打扰的时间'
+    }
+  },
+
+  onBack() {
+    prompt.showToast({ message: '已返回今日清单', duration: 0 })
+    router.back()
+  },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 560px; padding: 12px 12px 12px 12px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
+.image { width: 48px; height: 48px; margin: 4px 4px 12px 4px; }
+.title { margin: 4px 4px 8px 4px; font-size: 24px; color: #111111; }
+.meta, .body { margin: 4px 4px 4px 4px; font-size: 16px; color: #333333; }
+.action { width: 220px; height: 42px; margin: 16px 4px 4px 4px; border-radius: 8px; background-color: #2774c7; color: #ffffff; }
+</style>
