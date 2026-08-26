@@ -1,0 +1,21 @@
+<template>
+  <div class="page">
+    <text class="title">Navigation Detail</text>
+    <text class="state">独立页面已创建</text>
+    <text if="{{ ready }}" class="success">push/back 路径可验收</text>
+    <input class="back" type="button" value="router.back 返回" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { ready: true },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px; font-size: 24px; color: #111111; }
+.state, .success { margin: 18px 4px 4px 4px; font-size: 15px; color: #555555; } .success { color: #00a800; }
+.back { width: 220px; height: 40px; margin: 26px 4px; background-color: #555555; color: #ffffff; border-radius: 6px; }
+</style>

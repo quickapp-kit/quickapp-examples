@@ -1,0 +1,36 @@
+<template>
+  <div class="page">
+    <text class="title">system.file</text>
+    <text class="state">{{ state }}</text>
+    <input class="action" type="button" value="写入并读取私有文件" onclick="onFile" />
+    <text if="{{ result }}" class="result">{{ result }}</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+import file from '@system.file'
+export default {
+  private: { state: 'private/qa-gallery-state.txt', result: '' },
+  onFile() {
+    this.state = '写入中'
+    file.write({ path: 'private/qa-gallery-state.txt', data: 'gallery-ready' }).then(() => {
+      return file.read({ path: 'private/qa-gallery-state.txt' })
+    }).then(value => {
+      this.state = 'File completed'
+      this.result = String(value && value.fileData)
+    }).catch(error => {
+      this.state = 'File unsupported/failed'
+      this.result = String(error && error.code)
+    })
+  },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 28px 4px; font-size: 24px; color: #111111; }
+.state, .result { width: 250px; margin: 8px 4px; font-size: 14px; color: #555555; }
+.action, .back { width: 220px; height: 40px; margin: 12px 4px 4px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>

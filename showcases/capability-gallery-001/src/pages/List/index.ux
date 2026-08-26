@@ -1,0 +1,39 @@
+<template>
+  <div class="page">
+    <text class="title">List</text>
+    <list class="list">
+      <div class="row" for="{{ (index, item) in items }}" tid="id">
+        <text class="name">{{ item.name }}</text>
+        <text class="status">{{ item.status }}</text>
+        <input class="select" type="button" value="选择" onclick="onSelect" />
+      </div>
+    </list>
+    <text if="{{ selected }}" class="success">List 条目事件：{{ selected }}</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: {
+    selected: '',
+    items: [
+      { id: 'a', name: '第一条目', status: '正常' },
+      { id: 'b', name: '第二条目', status: '待处理' },
+      { id: 'c', name: '第三条目', status: '已完成' },
+    ],
+  },
+  onSelect(event) { this.selected = String(event && event.handlerId || 'list-item') },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 18px 4px; font-size: 26px; color: #111111; }
+.list { width: 250px; height: 220px; margin: 4px; flex-direction: column; background-color: #f2f4f5; }
+.row { width: 238px; height: 48px; margin: 3px 6px; padding: 5px; flex-direction: row; align-items: center; background-color: #ffffff; }
+.name { font-size: 14px; color: #111111; } .status { font-size: 12px; color: #555555; }
+.select { width: 42px; height: 24px; margin-left: 8px; background-color: #2774c7; color: #ffffff; border-radius: 4px; }
+.success { margin: 12px 4px; font-size: 13px; color: #00a800; }
+.back { width: 210px; height: 38px; margin: 26px 4px; background-color: #555555; color: #ffffff; border-radius: 6px; }
+</style>

@@ -1,0 +1,25 @@
+<template>
+  <div class="page">
+    <text class="title">Button</text>
+    <text class="state">点击次数：{{ count }}</text>
+    <input class="action" type="button" value="点击并更新" onclick="onClick" />
+    <text if="{{ count > 0 }}" class="success">click 事件已回传</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { count: 0 },
+  onClick() { this.count += 1 },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px; font-size: 26px; color: #111111; }
+.state { margin: 28px 4px 14px 4px; font-size: 18px; color: #555555; }
+.action, .back { width: 210px; height: 40px; margin: 6px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #00a800; } .back { background-color: #555555; }
+.success { margin: 8px 4px; font-size: 13px; color: #00a800; }
+</style>

@@ -1,0 +1,28 @@
+<template>
+  <div class="page">
+    <text class="title">Image</text>
+    <image class="image" src="assets/images/showcase.png" />
+    <text class="state">本地 32x32 PNG 资源</text>
+    <input class="action" type="button" value="切换资源状态" onclick="onToggle" />
+    <text if="{{ ready }}" class="success">资源已加载</text>
+    <text if="{{ !ready }}" class="failure">资源状态待确认</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { ready: true },
+  onToggle() { this.ready = !this.ready },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 4px; font-size: 26px; color: #111111; }
+.image { width: 64px; height: 64px; margin: 28px 4px 12px 4px; }
+.state, .success, .failure { margin: 4px; font-size: 14px; color: #555555; }
+.success { color: #00a800; } .failure { color: #d24a3a; }
+.action, .back { width: 210px; height: 38px; margin: 10px 4px 4px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>

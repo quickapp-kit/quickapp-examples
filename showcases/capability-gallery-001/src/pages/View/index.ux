@@ -1,0 +1,25 @@
+<template>
+  <div class="page">
+    <text class="title">View</text>
+    <div class="panel" if="{{ active }}"><text class="body">容器已挂载</text></div>
+    <text class="state">{{ state }}</text>
+    <input class="action" type="button" value="切换容器状态" onclick="onToggle" />
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { active: true, state: '首次渲染完成' },
+  onToggle() { this.active = !this.active; this.state = this.active ? 'View 已恢复' : 'View 已隐藏' },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px; font-size: 26px; color: #111111; }
+.panel { width: 250px; height: 100px; margin: 16px 4px; padding: 16px; background-color: #e9f2ff; }
+.body, .state { margin: 4px; font-size: 15px; color: #2774c7; }
+.action, .back { width: 210px; height: 38px; margin: 6px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>

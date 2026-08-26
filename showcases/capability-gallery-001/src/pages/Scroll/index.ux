@@ -1,0 +1,35 @@
+<template>
+  <div class="page">
+    <text class="title">Scroll</text>
+    <scroll class="viewport" onscroll="onScroll" onscrollbottom="onBottom">
+      <div class="content">
+        <text class="line">第一段内容</text>
+        <text class="line">第二段内容</text>
+        <text class="line">第三段内容</text>
+        <text class="line">第四段内容</text>
+        <text class="line">第五段内容</text>
+        <text class="line">第六段内容</text>
+      </div>
+    </scroll>
+    <text class="state">{{ state }}</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { state: '等待滚动' },
+  onScroll() { this.state = '滚动事件已回传' },
+  onBottom() { this.state = '已到内容底部' },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 18px 4px; font-size: 26px; color: #111111; }
+.viewport { width: 250px; height: 250px; margin: 4px; background-color: #f2f4f5; }
+.content { width: 230px; height: 430px; margin: 8px; flex-direction: column; }
+.line { width: 220px; height: 58px; margin: 3px; padding: 12px; background-color: #ffffff; color: #111111; font-size: 15px; }
+.state { margin: 12px 4px; font-size: 14px; color: #2774c7; }
+.back { width: 210px; height: 38px; margin: 20px 4px; background-color: #555555; color: #ffffff; border-radius: 6px; }
+</style>

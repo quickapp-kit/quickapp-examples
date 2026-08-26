@@ -1,0 +1,125 @@
+<template>
+  <div class="page">
+    <text class="title">能力画廊</text>
+    <text class="summary">组件与 Feature 独立验收</text>
+    <input class="next-action" type="button" value="下一组能力" onclick="onNext" />
+    <scroll class="viewport" onscroll="onScroll">
+      <list class="capability-list">
+        <div class="item" for="{{ (index, item) in items }}" tid="id">
+          <image class="icon" src="assets/images/showcase.png" />
+          <text class="item-title">{{ item.title }}</text>
+          <input class="open" type="button" value="查看" onclick="onOpen" />
+        </div>
+      </list>
+    </scroll>
+    <text class="result">{{ opened }}</text>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: {
+    opened: '',
+    category: '组件',
+    page: 0,
+    items: [
+      { id: 'view', category: '组件', title: 'View 容器' },
+      { id: 'text', category: '组件', title: 'Text 文本' },
+      { id: 'button', category: '组件', title: 'Button 事件' },
+      { id: 'image', category: '组件', title: 'Image 资源' },
+    ],
+  },
+
+  onOpen(event) {
+    const handler = String(event && event.handlerId)
+    const ids = ['view', 'text', 'button', 'image', 'input', 'switch', 'slider', 'picker', 'list', 'scroll', 'tabs', 'prompt', 'fetch', 'file', 'device', 'navigation']
+    const selected = ids.find(id => handler.endsWith('-' + id)) || 'view'
+    this.opened = selected
+    if (selected === 'view') router.push({ uri: '/pages/View' })
+    else if (selected === 'text') router.push({ uri: '/pages/Text' })
+    else if (selected === 'button') router.push({ uri: '/pages/Button' })
+    else if (selected === 'image') router.push({ uri: '/pages/Image' })
+    else if (selected === 'input') router.push({ uri: '/pages/Input' })
+    else if (selected === 'switch') router.push({ uri: '/pages/Switch' })
+    else if (selected === 'slider') router.push({ uri: '/pages/Slider' })
+    else if (selected === 'picker') router.push({ uri: '/pages/Picker' })
+    else if (selected === 'list') router.push({ uri: '/pages/List' })
+    else if (selected === 'scroll') router.push({ uri: '/pages/Scroll' })
+    else if (selected === 'tabs') router.push({ uri: '/pages/Tabs' })
+    else if (selected === 'prompt') router.push({ uri: '/pages/Prompt' })
+    else if (selected === 'fetch') router.push({ uri: '/pages/Fetch' })
+    else if (selected === 'file') router.push({ uri: '/pages/File' })
+    else if (selected === 'device') router.push({ uri: '/pages/Device' })
+    else router.push({ uri: '/pages/Navigation' })
+  },
+
+  onScroll() {},
+
+  onNext() {
+    if (this.page === 0) {
+      this.category = '组件'
+      this.items = [
+        { id: 'input', category: '组件', title: 'Input 输入' },
+        { id: 'switch', category: '组件', title: 'Switch 开关' },
+        { id: 'slider', category: '组件', title: 'Slider 滑块' },
+        { id: 'picker', category: '组件', title: 'Picker 选择' },
+      ]
+    } else if (this.page === 1) {
+      this.category = '组件'
+      this.items = [
+        { id: 'list', category: '组件', title: 'List 列表' },
+        { id: 'scroll', category: '组件', title: 'Scroll 滚动' },
+        { id: 'tabs', category: '组件', title: 'Tabs 受控切换' },
+      ]
+    } else if (this.page === 2) {
+      this.category = 'Feature'
+      this.items = [
+        { id: 'prompt', category: 'Feature', title: 'system.prompt' },
+        { id: 'fetch', category: 'Feature', title: 'system.fetch' },
+        { id: 'file', category: 'Feature', title: 'system.file' },
+        { id: 'device', category: 'Feature', title: 'system.device' },
+      ]
+    } else if (this.page === 3) {
+      this.category = 'Runtime'
+      this.items = [
+        { id: 'navigation', category: 'Runtime', title: 'router.push/back' },
+        { id: 'prompt', category: 'Feature', title: 'system.prompt' },
+        { id: 'fetch', category: 'Feature', title: 'system.fetch' },
+        { id: 'file', category: 'Feature', title: 'system.file' },
+      ]
+    } else if (this.page === 4) {
+      this.category = '组件'
+      this.items = [
+        { id: 'view', category: '组件', title: 'View 容器' },
+        { id: 'text', category: '组件', title: 'Text 文本' },
+        { id: 'button', category: '组件', title: 'Button 事件' },
+        { id: 'image', category: '组件', title: 'Image 资源' },
+      ]
+    } else {
+      this.category = 'Feature'
+      this.items = [
+        { id: 'prompt', category: 'Feature', title: 'system.prompt' },
+        { id: 'fetch', category: 'Feature', title: 'system.fetch' },
+        { id: 'file', category: 'Feature', title: 'system.file' },
+        { id: 'device', category: 'Feature', title: 'system.device' },
+      ]
+    }
+    this.page = (this.page + 1) % 6
+  },
+}
+</script>
+
+<style>
+.page { width: 300px; height: 520px; padding: 14px 12px 8px 12px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 3px 4px 4px 4px; font-size: 24px; color: #111111; }
+.summary, .result { margin: 2px 4px 8px 4px; font-size: 12px; color: #2774c7; }
+.next-action { width: 180px; height: 30px; margin: 2px 4px 6px 4px; background-color: #555555; color: #ffffff; border-radius: 4px; }
+.viewport { width: 276px; height: 390px; margin: 2px 2px 4px 2px; background-color: #f7f8f8; }
+.capability-list { width: 260px; height: 620px; margin: 4px 8px 4px 8px; flex-direction: column; }
+.item { width: 250px; height: 72px; margin: 4px; padding: 5px 6px; flex-direction: row; align-items: center; background-color: #ffffff; border-radius: 6px; }
+.icon { width: 32px; height: 32px; margin: 3px 8px 3px 3px; }
+.item-title { font-size: 14px; color: #111111; }
+.open { width: 58px; height: 26px; margin-left: 8px; background-color: #2774c7; color: #ffffff; border-radius: 4px; }
+</style>

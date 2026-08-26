@@ -1,0 +1,60 @@
+{
+  "package": "com.quickappkit.capabilitygallery001",
+  "name": "QuickApp Kit Capability Gallery 001",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "icon": "/assets/images/showcase.png",
+  "features": [
+    { "name": "system.router" },
+    { "name": "system.prompt" },
+    { "name": "system.device" },
+    { "name": "system.fetch" },
+    { "name": "system.file" }
+  ],
+  "router": {
+    "entry": "pages/Home",
+    "pages": {
+      "pages/Home": { "component": "index" },
+      "pages/View": { "component": "index" },
+      "pages/Text": { "component": "index" },
+      "pages/Button": { "component": "index" },
+      "pages/Image": { "component": "index" },
+      "pages/Input": { "component": "index" },
+      "pages/Switch": { "component": "index" },
+      "pages/Slider": { "component": "index" },
+      "pages/Picker": { "component": "index" },
+      "pages/List": { "component": "index" },
+      "pages/Scroll": { "component": "index" },
+      "pages/Tabs": { "component": "index" },
+      "pages/Prompt": { "component": "index" },
+      "pages/Fetch": { "component": "index" },
+      "pages/File": { "component": "index" },
+      "pages/Device": { "component": "index" },
+      "pages/Navigation": { "component": "index" },
+      "pages/NavigationDetail": { "component": "index" }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/Home": { "titleBarText": "能力画廊" },
+      "pages/View": { "titleBarText": "View" },
+      "pages/Text": { "titleBarText": "Text" },
+      "pages/Button": { "titleBarText": "Button" },
+      "pages/Image": { "titleBarText": "Image" },
+      "pages/Input": { "titleBarText": "Input" },
+      "pages/Switch": { "titleBarText": "Switch" },
+      "pages/Slider": { "titleBarText": "Slider" },
+      "pages/Picker": { "titleBarText": "Picker" },
+      "pages/List": { "titleBarText": "List" },
+      "pages/Scroll": { "titleBarText": "Scroll" },
+      "pages/Tabs": { "titleBarText": "Tabs" },
+      "pages/Prompt": { "titleBarText": "Prompt" },
+      "pages/Fetch": { "titleBarText": "Fetch" },
+      "pages/File": { "titleBarText": "File" },
+      "pages/Device": { "titleBarText": "Device" },
+      "pages/Navigation": { "titleBarText": "Navigation" },
+      "pages/NavigationDetail": { "titleBarText": "Navigation Detail" }
+    }
+  }
+}

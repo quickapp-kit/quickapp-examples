@@ -9,12 +9,17 @@
       <image class="signal" src="assets/images/task-review.png" />
       <text class="signal-text">今日任务</text>
     </div>
-    <div class="task" for="{{ (index, item) in items }}" tid="id">
-      <image class="task-image" src="assets/images/task-main.png" />
-      <text class="task-title">{{ item.title }}</text>
-      <text class="task-status">{{ item.status }}</text>
-      <input class="detail" type="button" value="看" onclick="onDetail" />
-    </div>
+    <scroll class="viewport" onscroll="onScroll" onscrollbottom="onBottom">
+      <list class="task-list">
+        <div class="task" for="{{ (index, item) in items }}" tid="id">
+          <image class="task-image" src="assets/images/task-main.png" />
+          <text class="task-title">{{ item.title }}</text>
+          <text class="task-status">{{ item.status }}</text>
+          <input class="detail" type="button" value="看" onclick="onDetail" />
+        </div>
+      </list>
+    </scroll>
+    <text if="{{ atBottom }}" class="edge">已到摘要底部</text>
   </div>
 </template>
 
@@ -25,6 +30,7 @@ import prompt from '@system.prompt'
 export default {
   private: {
     syncing: false,
+    atBottom: false,
     refreshCount: 0,
     summary: '3 项 / 0 次同步',
     items: [
@@ -42,6 +48,9 @@ export default {
     this.summary = '3 项 / ' + this.refreshCount + ' 次同步'
     prompt.showToast({ message: '状态已同步', duration: 0 })
   },
+
+  onScroll() {},
+  onBottom() { this.atBottom = true },
 
   onDetail(event) {
     const handler = String(event && event.handlerId)
@@ -62,7 +71,10 @@ export default {
 .signal { width: 20px; height: 20px; margin: 2px 2px 2px 2px; }
 .signal-text { margin-left: 5px; }
 .task { width: 190px; height: 34px; margin: 2px 2px 2px 2px; padding: 2px 4px 2px 4px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 5px; }
+.viewport { width: 198px; height: 116px; margin: 2px 2px 2px 2px; background-color: #f7f8f8; }
+.task-list { width: 194px; height: 132px; margin: 2px; flex-direction: column; }
 .task-image { width: 24px; height: 24px; margin: 2px 5px 2px 2px; }
 .task-title, .task-status { margin-left: 3px; font-size: 13px; color: #222222; }
 .detail { width: 36px; height: 24px; border-radius: 4px; background-color: #00a800; color: #ffffff; }
+.edge { margin: 1px 2px; font-size: 10px; color: #2774c7; }
 </style>

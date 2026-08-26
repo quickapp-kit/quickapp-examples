@@ -1,0 +1,22 @@
+<template>
+  <div class="page">
+    <text class="title">Navigation</text>
+    <text class="state">Home -> Navigation -> Detail</text>
+    <input class="action" type="button" value="router.push 进入 Detail" onclick="onPush" />
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  onPush() { router.push({ uri: '/pages/NavigationDetail' }) },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 28px 4px; font-size: 24px; color: #111111; }
+.state { margin: 8px 4px; font-size: 14px; color: #555555; }
+.action, .back { width: 220px; height: 40px; margin: 16px 4px 4px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>

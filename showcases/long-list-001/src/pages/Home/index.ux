@@ -1,0 +1,54 @@
+<template>
+  <div class="page">
+    <text class="title">长列表</text>
+    <text class="summary">20 条设备任务</text>
+    <scroll class="viewport">
+      <list class="list">
+        <div class="item" for="{{ (index, item) in tasks }}" tid="id">
+          <text class="name">{{ item.name }}</text>
+          <text class="status">{{ item.status }}</text>
+        </div>
+      </list>
+    </scroll>
+  </div>
+</template>
+
+<script>
+export default {
+  private: {
+    tasks: [
+      { id: 't01', name: '一号泵站', status: '正常' },
+      { id: 't02', name: '二号泵站', status: '待复核' },
+      { id: 't03', name: '三号泵站', status: '正常' },
+      { id: 't04', name: '四号泵站', status: '异常' },
+      { id: 't05', name: '五号泵站', status: '正常' },
+      { id: 't06', name: '六号泵站', status: '待复核' },
+      { id: 't07', name: '七号泵站', status: '正常' },
+      { id: 't08', name: '八号泵站', status: '异常' },
+      { id: 't09', name: '九号泵站', status: '正常' },
+      { id: 't10', name: '十号泵站', status: '待复核' },
+      { id: 't11', name: '十一号泵站', status: '正常' },
+      { id: 't12', name: '十二号泵站', status: '正常' },
+      { id: 't13', name: '十三号泵站', status: '异常' },
+      { id: 't14', name: '十四号泵站', status: '正常' },
+      { id: 't15', name: '十五号泵站', status: '待复核' },
+      { id: 't16', name: '十六号泵站', status: '正常' },
+      { id: 't17', name: '十七号泵站', status: '正常' },
+      { id: 't18', name: '十八号泵站', status: '异常' },
+      { id: 't19', name: '十九号泵站', status: '正常' },
+      { id: 't20', name: '二十号泵站', status: '待复核' },
+    ],
+  },
+}
+</script>
+
+<style>
+.page { width: 320px; height: 640px; padding: 14px 12px 8px 12px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 3px 4px 4px 4px; font-size: 24px; color: #111111; }
+.summary { margin: 2px 4px 8px 4px; font-size: 12px; color: #2774c7; }
+.viewport { width: 296px; height: 560px; margin: 2px 2px 4px 2px; background-color: #f7f8f8; }
+.list { width: 280px; height: 1600px; margin: 4px 8px 4px 8px; flex-direction: column; }
+.item { width: 268px; height: 68px; margin: 4px 4px 4px 4px; padding: 5px 8px 5px 8px; flex-direction: row; align-items: center; background-color: #ffffff; border-radius: 6px; }
+.name { width: 150px; font-size: 16px; color: #111111; }
+.status { margin-left: 12px; font-size: 14px; color: #2774c7; }
+</style>

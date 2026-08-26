@@ -1,22 +1,58 @@
 <template>
   <div class="page">
-    <text class="eyebrow">QUICKAPP MARKET</text>
-    <text class="title">好物精选</text>
-    <text class="summary">今日推荐 / 3 件好物</text>
-    <text if="{{ loading }}" class="state">正在更新推荐</text>
-    <div class="product" for="{{ (index, item) in products }}" tid="id">
-      <image class="product-image" src="assets/images/product-main.png" />
-      <text class="product-title">{{ item.title }}</text>
-      <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
-      <text class="product-price">{{ item.price }}</text>
-      <input class="detail" type="button" value="查看商品" onclick="onProduct" />
+    <div class="header">
+      <text class="eyebrow">QUICKAPP MARKET</text>
+      <text class="title">好物精选</text>
     </div>
-    <div class="tabs">
-      <input class="tab active" type="button" value="首页" onclick="onHome" />
-      <input class="tab" type="button" value="直播" onclick="onLive" />
-      <input class="tab" type="button" value="AI Agent" onclick="onAgent" />
-      <input class="tab" type="button" value="我的" onclick="onMe" />
-    </div>
+
+    <scroll class="content-area">
+      <div class="content-shell">
+        <div class="home-content">
+          <text if="{{ selectedTab === 0 }}" class="summary">今日推荐 / {{ products.length }} 件好物</text>
+          <input if="{{ selectedTab === 0 }}" class="refresh" type="button" value="切换推荐状态" onclick="onRefresh" />
+          <text if="{{ selectedTab === 0 }}" class="state">{{ refreshState }}</text>
+          <text if="{{ loading }}" class="state">状态更新中</text>
+          <div if="{{ selectedTab === 0 }}" class="featured">
+            <image class="feature-image" src="assets/images/product-main.png" />
+            <image class="feature-image" src="assets/images/product-focus.png" />
+            <image class="feature-image" src="assets/images/product-review.png" />
+            <text class="feature-label">本地精选</text>
+          </div>
+          <div class="product" for="{{ (index, item) in products }}" tid="id">
+            <image class="product-image" src="assets/images/product-main.png" />
+            <div class="product-copy">
+              <text class="product-title">{{ item.title }}</text>
+              <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
+              <text class="product-price">{{ item.price }}</text>
+            </div>
+            <input class="detail" type="button" value="查看详情" onclick="onProduct" />
+          </div>
+        </div>
+
+        <div class="panel" if="{{ selectedTab === 1 }}">
+          <text class="panel-title">分类</text>
+          <text class="panel-body">家居 / 出行 / 生活</text>
+          <text class="panel-body">按主题浏览本地精选内容</text>
+          <text class="panel-body">当前分类：全部</text>
+        </div>
+
+        <div class="panel" if="{{ selectedTab === 2 }}">
+          <text class="panel-title">购物车</text>
+          <text class="panel-body">购物车暂存 2 件商品</text>
+          <text class="panel-body">本地体验，不连接网络</text>
+          <text class="panel-body">合计：428 元</text>
+        </div>
+
+        <div class="panel" if="{{ selectedTab === 3 }}">
+          <text class="panel-title">我的</text>
+          <text class="panel-body">QuickApp 用户</text>
+          <text class="panel-body">收藏 3 件 / 浏览 8 次</text>
+          <text class="panel-body">本地体验，不连接网络</text>
+        </div>
+      </div>
+    </scroll>
+
+    <tabs class="tabs" items="首页|分类|购物车|我的" selected="{{ selectedTab }}" onchange="onTabChange"></tabs>
   </div>
 </template>
 
@@ -26,42 +62,127 @@ import prompt from '@system.prompt'
 
 export default {
   private: {
+    selectedTab: 0,
     loading: false,
+    refreshState: '推荐状态：稳定',
+    refreshCount: 0,
     products: [
-      { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '¥129' },
-      { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '¥299' },
-      { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '¥89' },
+      { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '129 元' },
+      { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '299 元' },
+      { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '89 元' },
+      { id: 'lampD', title: '夜读护眼灯', category: '家居', status: '精选', price: '159 元' },
+      { id: 'bagE', title: '轻便旅行袋', category: '出行', status: '热卖', price: '239 元' },
+      { id: 'cupF', title: '随行咖啡杯', category: '生活', status: '上新', price: '79 元' },
+      { id: 'lampG', title: '桌面氛围灯', category: '家居', status: '精选', price: '199 元' },
+      { id: 'bagH', title: '城市双肩包', category: '出行', status: '热卖', price: '329 元' },
+      { id: 'cupI', title: '简约玻璃杯', category: '生活', status: '稳定', price: '59 元' },
+      { id: 'lampJ', title: '床头阅读灯', category: '家居', status: '上新', price: '179 元' },
+      { id: 'bagK', title: '通勤收纳包', category: '出行', status: '精选', price: '189 元' },
+      { id: 'cupL', title: '随手保温杯', category: '生活', status: '热卖', price: '99 元' },
+      { id: 'lampM', title: '便携露营灯', category: '家居', status: '上新', price: '219 元' },
+      { id: 'bagN', title: '周末旅行包', category: '出行', status: '稳定', price: '269 元' },
+      { id: 'cupO', title: '轻巧随行杯', category: '生活', status: '精选', price: '69 元' },
+      { id: 'lampP', title: '小夜灯套装', category: '家居', status: '热卖', price: '149 元' },
+      { id: 'bagQ', title: '轻量电脑包', category: '出行', status: '上新', price: '359 元' },
+      { id: 'cupR', title: '透明冷水壶', category: '生活', status: '稳定', price: '119 元' },
+      { id: 'lampS', title: '阅读工作灯', category: '家居', status: '精选', price: '249 元' },
+      { id: 'bagT', title: '短途旅行包', category: '出行', status: '热卖', price: '289 元' },
     ],
+  },
+
+  onTabChange(event) {
+    if (event && Number.isInteger(event.index)) {
+      this.selectedTab = event.index
+      if (event.index === 0) {
+        this.products = [
+          { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '129 元' },
+          { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '299 元' },
+          { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '89 元' },
+          { id: 'lampD', title: '夜读护眼灯', category: '家居', status: '精选', price: '159 元' },
+          { id: 'bagE', title: '轻便旅行袋', category: '出行', status: '热卖', price: '239 元' },
+          { id: 'cupF', title: '随行咖啡杯', category: '生活', status: '上新', price: '79 元' },
+          { id: 'lampG', title: '桌面氛围灯', category: '家居', status: '精选', price: '199 元' },
+          { id: 'bagH', title: '城市双肩包', category: '出行', status: '热卖', price: '329 元' },
+          { id: 'cupI', title: '简约玻璃杯', category: '生活', status: '稳定', price: '59 元' },
+          { id: 'lampJ', title: '床头阅读灯', category: '家居', status: '上新', price: '179 元' },
+          { id: 'bagK', title: '通勤收纳包', category: '出行', status: '精选', price: '189 元' },
+          { id: 'cupL', title: '随手保温杯', category: '生活', status: '热卖', price: '99 元' },
+          { id: 'lampM', title: '便携露营灯', category: '家居', status: '上新', price: '219 元' },
+          { id: 'bagN', title: '周末旅行包', category: '出行', status: '稳定', price: '269 元' },
+          { id: 'cupO', title: '轻巧随行杯', category: '生活', status: '精选', price: '69 元' },
+          { id: 'lampP', title: '小夜灯套装', category: '家居', status: '热卖', price: '149 元' },
+          { id: 'bagQ', title: '轻量电脑包', category: '出行', status: '上新', price: '359 元' },
+          { id: 'cupR', title: '透明冷水壶', category: '生活', status: '稳定', price: '119 元' },
+          { id: 'lampS', title: '阅读工作灯', category: '家居', status: '精选', price: '249 元' },
+          { id: 'bagT', title: '短途旅行包', category: '出行', status: '热卖', price: '289 元' },
+        ]
+      } else {
+        this.products = []
+      }
+    }
+  },
+
+  onRefresh() {
+    this.refreshCount += 1
+    this.loading = !this.loading
+    this.refreshState = this.loading ? '正在更新推荐' : '推荐状态：稳定'
+    if (this.products.length > 1) {
+      const first = this.products[0]
+      this.products = this.products.slice(1).concat([first])
+    }
+    prompt.showToast({ message: '推荐状态已切换', duration: 0 })
   },
 
   onProduct(event) {
     const handler = String(event && event.handlerId)
     if (handler.endsWith('-bagB')) globalThis.__qak_commerce_selection__ = 'bagB'
     else if (handler.endsWith('-cupC')) globalThis.__qak_commerce_selection__ = 'cupC'
+    else if (handler.endsWith('-lampD')) globalThis.__qak_commerce_selection__ = 'lampD'
+    else if (handler.endsWith('-bagE')) globalThis.__qak_commerce_selection__ = 'bagE'
+    else if (handler.endsWith('-cupF')) globalThis.__qak_commerce_selection__ = 'cupF'
+    else if (handler.endsWith('-lampG')) globalThis.__qak_commerce_selection__ = 'lampG'
+    else if (handler.endsWith('-bagH')) globalThis.__qak_commerce_selection__ = 'bagH'
+    else if (handler.endsWith('-cupI')) globalThis.__qak_commerce_selection__ = 'cupI'
+    else if (handler.endsWith('-lampJ')) globalThis.__qak_commerce_selection__ = 'lampJ'
+    else if (handler.endsWith('-bagK')) globalThis.__qak_commerce_selection__ = 'bagK'
+    else if (handler.endsWith('-cupL')) globalThis.__qak_commerce_selection__ = 'cupL'
+    else if (handler.endsWith('-lampM')) globalThis.__qak_commerce_selection__ = 'lampM'
+    else if (handler.endsWith('-bagN')) globalThis.__qak_commerce_selection__ = 'bagN'
+    else if (handler.endsWith('-cupO')) globalThis.__qak_commerce_selection__ = 'cupO'
+    else if (handler.endsWith('-lampP')) globalThis.__qak_commerce_selection__ = 'lampP'
+    else if (handler.endsWith('-bagQ')) globalThis.__qak_commerce_selection__ = 'bagQ'
+    else if (handler.endsWith('-cupR')) globalThis.__qak_commerce_selection__ = 'cupR'
+    else if (handler.endsWith('-lampS')) globalThis.__qak_commerce_selection__ = 'lampS'
+    else if (handler.endsWith('-bagT')) globalThis.__qak_commerce_selection__ = 'bagT'
     else globalThis.__qak_commerce_selection__ = 'lampA'
     prompt.showToast({ message: '打开商品详情', duration: 0 })
     router.push({ uri: '/pages/ProductDetail' })
   },
-
-  onHome() {},
-  onLive() { router.push({ uri: '/pages/Live' }) },
-  onAgent() { router.push({ uri: '/pages/Agent' }) },
-  onMe() { router.push({ uri: '/pages/Me' }) },
 }
 </script>
 
 <style>
-.page { width: 300px; height: 560px; padding: 12px 12px 8px 12px; flex-direction: column; background-color: #ffffff; }
-.eyebrow { margin: 2px 4px 2px 4px; font-size: 11px; color: #2774c7; }
-.title { margin: 2px 4px 2px 4px; font-size: 26px; color: #111111; }
-.summary, .state { margin: 3px 4px 3px 4px; font-size: 14px; color: #555555; }
-.product { width: 260px; height: 86px; margin: 3px 4px 3px 4px; padding: 5px 6px 5px 6px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 7px; }
-.product-image { width: 40px; height: 40px; margin: 4px 7px 4px 3px; }
+.page { width: 100%; height: 100%; padding: 12px 12px 10px 12px; flex-direction: column; justify-content: space-between; background-color: #ffffff; }
+.header { width: 100%; height: 82px; flex-direction: column; }
+.eyebrow { margin: 2px 4px 1px 4px; font-size: 11px; color: #2774c7; }
+.title { margin: 1px 4px 2px 4px; font-size: 25px; color: #111111; }
+.content-area { width: 100%; height: 70%; }
+.content-shell { width: 100%; flex-direction: column; }
+.summary, .state { margin: 2px 4px 3px 4px; font-size: 13px; color: #555555; }
+.home-content { width: 100%; flex-direction: column; }
+.refresh { width: 132px; height: 28px; margin: 2px 4px 3px 4px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
+.featured { width: 100%; height: 44px; margin: 2px 0 3px 0; flex-direction: row; align-items: center; background-color: #f7f8f8; }
+.feature-image { width: 28px; height: 28px; margin: 3px 4px 3px 4px; }
+.feature-label { margin-left: 4px; font-size: 12px; color: #555555; }
+.product { width: 100%; height: 112px; margin: 4px 0 4px 0; padding: 8px 7px 8px 7px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 7px; }
+.product-image { width: 64px; height: 64px; margin: 4px 8px 4px 2px; }
+.product-copy { width: 48%; flex-direction: column; }
 .product-title { font-size: 15px; color: #111111; }
 .product-meta, .product-price { margin-left: 4px; font-size: 12px; color: #555555; }
 .product-price { color: #d24a3a; }
-.detail { width: 72px; height: 28px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
-.tabs { width: 272px; height: 42px; margin: 8px 2px 2px 2px; flex-direction: row; align-items: center; background-color: #f7f8f8; }
-.tab { width: 66px; height: 30px; margin: 2px 1px 2px 1px; border-radius: 4px; background-color: #e2e5e7; color: #333333; }
-.active { background-color: #2774c7; color: #ffffff; }
+.detail { width: 68px; height: 32px; margin-left: 4px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
+.panel { width: 100%; height: 150px; margin: 12px 0 4px 0; padding: 18px 12px 12px 12px; flex-direction: column; background-color: #f2f4f5; border-radius: 7px; }
+.panel-title { margin: 2px 2px 10px 2px; font-size: 20px; color: #111111; }
+.panel-body { margin: 3px 2px 3px 2px; font-size: 14px; color: #555555; }
+.tabs { width: 100%; height: 48px; background-color: #2774c7; color: #ffffff; border-radius: 6px; }
 </style>

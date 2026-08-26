@@ -1018,10 +1018,12 @@ class JsCoreIngress final : public ja::CoreIngressPort,
                         toast->requestId);
         }
         const auto feature = featureRegistry_->invoke(qcf::Request{
-            requestId.value(), surfaceId.value(), qcf::ModuleId::kSystemPrompt,
-            qcf::Method::kShowToast, toast->message, std::nullopt,
-            toast->durationMs, std::nullopt, "", {}, std::nullopt, 0, "",
-            std::nullopt, std::nullopt, std::nullopt});
+            .request_id = requestId.value(),
+            .surface_id = surfaceId.value(),
+            .module = qcf::ModuleId::kSystemPrompt,
+            .method = qcf::Method::kShowToast,
+            .text = toast->message,
+            .duration_ms = toast->durationMs});
         const auto status = std::string(qcf::status_wire(feature.status));
         const auto error = feature.error
                                ? std::optional<ja::MessageRuntimeError>(
@@ -1049,9 +1051,10 @@ class JsCoreIngress final : public ja::CoreIngressPort,
                         device->requestId);
         }
         const auto feature = featureRegistry_->invoke(qcf::Request{
-            requestId.value(), surfaceId.value(), qcf::ModuleId::kSystemDevice,
-            qcf::Method::kGetInfo, "", std::nullopt, 0, std::nullopt, "", {},
-            std::nullopt, 0, "", std::nullopt, std::nullopt, std::nullopt});
+            .request_id = requestId.value(),
+            .surface_id = surfaceId.value(),
+            .module = qcf::ModuleId::kSystemDevice,
+            .method = qcf::Method::kGetInfo});
         std::optional<ja::DeviceInfo> info;
         if (feature.device_info) {
           const auto& value = *feature.device_info;
@@ -1145,10 +1148,11 @@ class JsCoreIngress final : public ja::CoreIngressPort,
                         title->requestId);
         }
         const auto feature = featureRegistry_->invoke(qcf::Request{
-            requestId.value(), surfaceId.value(), qcf::ModuleId::kPageHost,
-            qcf::Method::kSetTitleBar, title->text, std::nullopt, 0,
-            std::nullopt, "", {}, std::nullopt, 0, "", std::nullopt,
-            std::nullopt, std::nullopt});
+            .request_id = requestId.value(),
+            .surface_id = surfaceId.value(),
+            .module = qcf::ModuleId::kPageHost,
+            .method = qcf::Method::kSetTitleBar,
+            .text = title->text});
         const auto error = feature.error
                                ? std::optional<ja::MessageRuntimeError>(
                                      ja::MessageRuntimeError{
@@ -1177,10 +1181,12 @@ class JsCoreIngress final : public ja::CoreIngressPort,
                         meta->requestId);
         }
         const auto feature = featureRegistry_->invoke(qcf::Request{
-            requestId.value(), surfaceId.value(), qcf::ModuleId::kPageHost,
-            qcf::Method::kSetMeta, meta->title.value_or(""),
-            meta->description, 0, std::nullopt, "", {}, std::nullopt, 0, "",
-            std::nullopt, std::nullopt, std::nullopt});
+            .request_id = requestId.value(),
+            .surface_id = surfaceId.value(),
+            .module = qcf::ModuleId::kPageHost,
+            .method = qcf::Method::kSetMeta,
+            .text = meta->title.value_or(""),
+            .description = meta->description});
         const auto error = feature.error
                                ? std::optional<ja::MessageRuntimeError>(
                                      ja::MessageRuntimeError{
@@ -1542,8 +1548,10 @@ int main(int argc, char** argv) {
     const bool controls001 = package->package_id() == "com.quickappkit.controls001";
     const bool controls002 = package->package_id() == "com.quickappkit.controls002";
     const bool list001 = package->package_id() == "com.quickappkit.list001";
-    const bool mountOnlyRpk = controls002 || list001;
-    const bool showcaseRpk = !rpkOverride.empty() &&
+    const bool tabs001 = package->package_id() == "com.quickappkit.tabs001";
+    const bool platform001 = package->package_id() == "com.quickappkit.platform001";
+    const bool mountOnlyRpk = controls002 || list001 || tabs001 || platform001;
+    const bool showcaseRpk = !mountOnlyRpk && !rpkOverride.empty() &&
         package->entry_route() == "/pages/Home";
     if (kInteractiveSimulator && !rpkOverride.empty() &&
         package->entry_route() == "/pages/Home" && !gallery001 && !controls001) {
@@ -1582,6 +1590,10 @@ int main(int argc, char** argv) {
     if (!featureRegistry.register_provider(qcf::ModuleId::kSystemPrompt,
                                            featureProvider) ||
         !featureRegistry.register_provider(qcf::ModuleId::kSystemDevice,
+                                           featureProvider) ||
+        !featureRegistry.register_provider(qcf::ModuleId::kSystemFetch,
+                                           featureProvider) ||
+        !featureRegistry.register_provider(qcf::ModuleId::kSystemFile,
                                            featureProvider) ||
         !featureRegistry.register_provider(qcf::ModuleId::kPageHost,
                                            featureProvider)) {
@@ -2018,7 +2030,7 @@ int main(int argc, char** argv) {
                  ja::BootstrapExpectation{"app", app->module_id(), std::nullopt});
             vm->onAppContext({package->package_id(), "1.0.0", "1", 1,
                               {"system.router", "system.prompt", "system.device",
-                               "system.fetch"}});
+                               "system.fetch", "system.file"}});
             vm->onVmInitialization({"req:2", "app", std::nullopt});
             // An app module may validly omit lifecycle hooks; page loading does
             // not depend on an app VM instance being retained.
@@ -2057,7 +2069,7 @@ int main(int argc, char** argv) {
     };
 
     const std::string rootRoute =
-        showcaseRpk
+        (showcaseRpk || mountOnlyRpk)
             ? package->entry_route()
             : (binding001 ? "/pages/Binding"
                           : (case002 ? "/pages/Contract"
@@ -2073,6 +2085,7 @@ int main(int argc, char** argv) {
     const auto surfaceFixture = qc::SurfaceId::parse("srf:1");
     if (!surfaceFixture) throw std::runtime_error("root SurfaceId fixture is invalid");
     auto surfaceId = surfaceFixture.value();
+    bool rpkMounted = false;
     if (imageInputMissing) {
       waitFor([&] { return initialResultsRaw->completed(); },
               "missing Image resource failure did not settle");
@@ -2091,6 +2104,27 @@ int main(int argc, char** argv) {
       std::fprintf(stderr,
                    "b3.image_failure rejected=1 partial_objects=0 mount_objects=0 core_nodes_before=%llu resources=stable\n",
                    static_cast<unsigned long long>(failedCoreNodes));
+    } else if (mountOnlyRpk) {
+      waitFor([&] { return initialResultsRaw->completed(); },
+              "mount-only RPK initial mount did not settle");
+      if (!initialResultsRaw->prepared()) {
+        std::fprintf(stderr,
+                     "rpk.lvgl_mount=false package=%s reason=platform_mount_rejected\n",
+                     package->package_id().c_str());
+      } else {
+        waitFor([&] {
+          const auto snapshot = controller->snapshot();
+          return snapshot.navigation_stack.size() == 1 &&
+                 !snapshot.navigation_active && snapshot.records.size() == 1 &&
+                 snapshot.records.front().lifecycle == qs::SurfaceLifecycle::kVisible;
+        }, "mount-only RPK surface did not become visible");
+        const auto rootSnapshot = controller->snapshot();
+        if (rootSnapshot.navigation_stack.empty())
+          throw std::runtime_error("mount-only RPK navigation did not produce a SurfaceId");
+        surfaceId = rootSnapshot.navigation_stack.front();
+        rpkMounted = true;
+        std::fprintf(stderr, "surface.root.visible=%s\n", surfaceId.wire().c_str());
+      }
     } else {
       waitFor([&] {
         const auto snapshot = controller->snapshot();
@@ -2102,6 +2136,7 @@ int main(int argc, char** argv) {
       if (rootSnapshot.navigation_stack.empty())
         throw std::runtime_error("root navigation did not produce a SurfaceId");
       surfaceId = rootSnapshot.navigation_stack.front();
+      rpkMounted = true;
       std::fprintf(stderr, "surface.root.visible=%s\n", surfaceId.wire().c_str());
     }
 
@@ -2122,7 +2157,12 @@ int main(int argc, char** argv) {
         if (buttonNode) break;
       }
     }
-    if (!buttonNode) throw std::runtime_error(imageInput001 ? "B3 input handler node not registered" : "Case 001 button node not registered");
+    // A showcase RPK may intentionally be a read-only surface (for example a
+    // long list). The interactive simulator still needs to keep its window
+    // alive even when there is no Handler to bind.
+    if (!buttonNode && !(kInteractiveSimulator && showcaseRpk)) {
+      throw std::runtime_error(imageInput001 ? "B3 input handler node not registered" : "Case 001 button node not registered");
+    }
     const auto missingNode = qc::NodeId::parse("node:999");
     if (!missingNode) throw std::runtime_error("negative NodeId is invalid");
     if (!kInteractiveSimulator) {
@@ -2289,7 +2329,8 @@ int main(int argc, char** argv) {
     if (lvglP0 || showcaseRpk) {
       buttonObject = hostRoot ? lv_obj_get_child(hostRoot, 2) : nullptr;
     }
-    if (!imageInput001 && !controls001 && buttonObject == nullptr)
+    if (!imageInput001 && !controls001 && buttonObject == nullptr &&
+        !(kInteractiveSimulator && showcaseRpk))
       throw std::runtime_error("Case 001 real LVGL button is absent");
     if (imageInput001 && inputObject == nullptr)
       throw std::runtime_error("B3 real LVGL input is absent");
@@ -3091,7 +3132,7 @@ int main(int argc, char** argv) {
       std::cout << "rpk.mount_only=true\n"
                    "rpk.package=" << package->package_id() << "\n"
                    "rpk.loader=true\n"
-                   "rpk.lvgl_mount=true\n"
+                   "rpk.lvgl_mount=" << (rpkMounted ? "true" : "false") << "\n"
                    "resources_released=true\n";
     } else if (binding001) {
       std::cout << "rpk.binding001=true\n"

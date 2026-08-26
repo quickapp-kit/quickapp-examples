@@ -1,0 +1,26 @@
+<template>
+  <div class="page">
+    <text class="title">Switch</text>
+    <switch class="toggle" checked="true" onchange="onChange"></switch>
+    <text class="state">checked：{{ checked }}</text>
+    <text if="{{ checked }}" class="success">change 回传：开启</text>
+    <text if="{{ !checked }}" class="failure">change 回传：关闭</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { checked: true },
+  onChange(event) { this.checked = Boolean(event && event.checked) },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; align-items: center; background-color: #ffffff; }
+.title { margin: 4px; font-size: 26px; color: #111111; }
+.toggle { width: 54px; height: 30px; margin: 32px 4px 14px 4px; background-color: #2774c7; border-radius: 15px; }
+.state, .success, .failure { margin: 4px; font-size: 15px; color: #555555; }
+.success { color: #00a800; } .failure { color: #d24a3a; }
+.back { width: 210px; height: 38px; margin: 24px 4px; background-color: #555555; color: #ffffff; border-radius: 6px; }
+</style>

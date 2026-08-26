@@ -15,3 +15,8 @@ runtime; they do not contain handwritten Page IR or runtime transactions.
 Each case has a Home/Detail route, state update, conditional rendering,
 keyed list rendering, real `router.push()`/`router.back()`, small local PNG
 assets, and a generated `dist/<case>.rpk` plus metadata file.
+## Final V1 showcase set
+
+- `showcases/capability-gallery-001/`: independent component and Feature acceptance pages.
+- `showcases/commerce-001/`: mobile product/content application with controlled Tabs.
+- `showcases/wearable-001/`: compact card-wallet style wearable application using Scroll/List.

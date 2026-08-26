@@ -13,18 +13,12 @@
     "entry": "pages/Home",
     "pages": {
       "pages/Home": { "component": "index" },
-      "pages/Live": { "component": "index" },
-      "pages/Agent": { "component": "index" },
-      "pages/Me": { "component": "index" },
       "pages/ProductDetail": { "component": "index" }
     }
   },
   "display": {
     "pages": {
       "pages/Home": { "titleBarText": "好物精选" },
-      "pages/Live": { "titleBarText": "直播" },
-      "pages/Agent": { "titleBarText": "AI Agent" },
-      "pages/Me": { "titleBarText": "我的" },
       "pages/ProductDetail": { "titleBarText": "商品详情" }
     }
   }

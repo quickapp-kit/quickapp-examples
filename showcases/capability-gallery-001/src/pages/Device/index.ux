@@ -1,0 +1,36 @@
+<template>
+  <div class="page">
+    <text class="title">system.device</text>
+    <text class="state">{{ state }}</text>
+    <input class="action" type="button" value="读取设备摘要" onclick="onDevice" />
+    <text if="{{ detail }}" class="result">{{ detail }}</text>
+    <text if="{{ unsupported }}" class="failure">当前平台返回 unsupported/failed</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+import device from '@system.device'
+export default {
+  private: { state: '等待设备能力', detail: '', unsupported: false },
+  onDevice() {
+    device.getInfo().then(value => {
+      this.state = 'Device completed'
+      this.detail = String(value && (value.deviceType || value.osType || 'device-ready'))
+    }).catch(error => {
+      this.state = 'Device unsupported/failed'
+      this.detail = String(error && error.code)
+      this.unsupported = true
+    })
+  },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 28px 4px; font-size: 24px; color: #111111; }
+.state, .result, .failure { width: 250px; margin: 8px 4px; font-size: 14px; color: #555555; }
+.failure { color: #d24a3a; }
+.action, .back { width: 220px; height: 40px; margin: 12px 4px 4px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>

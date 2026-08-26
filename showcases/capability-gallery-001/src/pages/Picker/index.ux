@@ -1,0 +1,25 @@
+<template>
+  <div class="page">
+    <text class="title">Picker</text>
+    <picker class="picker" mode="text" range="安静|标准|性能" selected="1" onchange="onChange"></picker>
+    <text class="state">当前模式：{{ mode }}</text>
+    <text if="{{ changed }}" class="success">selected/value 已回传</text>
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { mode: '标准', changed: false },
+  onChange(event) { this.mode = String(event && event.value || this.mode); this.changed = true },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px 4px 36px 4px; font-size: 26px; color: #111111; }
+.picker { width: 250px; height: 40px; margin: 4px; background-color: #f2f4f5; color: #111111; border-radius: 5px; }
+.state, .success { margin: 18px 4px 4px 4px; font-size: 15px; color: #555555; }
+.success { color: #00a800; }
+.back { width: 210px; height: 38px; margin: 28px 4px; background-color: #555555; color: #ffffff; border-radius: 6px; }
+</style>

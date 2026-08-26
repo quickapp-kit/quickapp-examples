@@ -1,0 +1,25 @@
+<template>
+  <div class="page">
+    <text class="title">Text</text>
+    <text class="sample">{{ message }}</text>
+    <text if="{{ emphasized }}" class="accent">状态文本已更新</text>
+    <input class="action" type="button" value="更新文本" onclick="onUpdate" />
+    <input class="back" type="button" value="返回能力画廊" onclick="onBack" />
+  </div>
+</template>
+<script>
+import router from '@system.router'
+export default {
+  private: { message: 'Text 首次渲染', emphasized: false },
+  onUpdate() { this.message = 'Text 事件回传后更新'; this.emphasized = true },
+  onBack() { router.back() },
+}
+</script>
+<style>
+.page { width: 300px; height: 560px; padding: 18px; flex-direction: column; background-color: #ffffff; }
+.title { margin: 4px; font-size: 26px; color: #111111; }
+.sample { margin: 28px 4px 8px 4px; font-size: 22px; color: #111111; }
+.accent { margin: 4px; font-size: 14px; color: #00a800; }
+.action, .back { width: 210px; height: 38px; margin: 10px 4px 4px 4px; color: #ffffff; border-radius: 6px; }
+.action { background-color: #2774c7; } .back { background-color: #555555; }
+</style>
