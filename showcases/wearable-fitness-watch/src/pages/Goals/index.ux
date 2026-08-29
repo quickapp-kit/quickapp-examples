@@ -1,0 +1,71 @@
+<template>
+  <div class="page">
+    <text class="title">今日目标</text>
+    <text if="{{ allDone }}" class="all-done">全部完成</text>
+    <div class="icons-row">
+      <image class="top-icon" src="assets/images/steps.png" />
+      <image class="top-icon" src="assets/images/heart.png" />
+      <image class="top-icon" src="assets/images/fire.png" />
+      <image class="top-icon" src="assets/images/water.png" />
+    </div>
+    <scroll class="goal-scroll">
+      <list class="goal-list">
+        <div class="goal-item" for="{{ (index, item) in goals }}" tid="id">
+          <image class="goal-icon" src="assets/images/target.png" />
+          <text class="goal-name">{{ item.name }}</text>
+          <text class="goal-progress">{{ item.current }}/{{ item.target }}</text>
+          <text class="goal-done">{{ item.done ? '✓' : '' }}</text>
+          <input class="goal-btn" type="button" value="详情" onclick="onDetail" />
+        </div>
+      </list>
+    </scroll>
+    <input class="refresh-btn" type="button" value="返回" onclick="onBack" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: {
+    allDone: false,
+    goals: [
+      { id: 'steps', name: '步行', current: '6842', target: '10000', done: false },
+      { id: 'calories', name: '消耗', current: '186', target: '300', done: false },
+      { id: 'stand', name: '站立', current: '5', target: '8', done: false },
+      { id: 'water', name: '饮水', current: '6', target: '8', done: false },
+    ],
+  },
+
+  onBack() {
+    router.back()
+  },
+
+  onDetail(event) {
+    const handler = String(event && event.handlerId)
+    let selected = 'steps'
+    if (handler.includes('calories')) selected = 'calories'
+    else if (handler.includes('stand')) selected = 'stand'
+    else if (handler.includes('water')) selected = 'water'
+    globalThis.__qak_fitness_selection__ = selected
+    router.push({ uri: '/pages/Detail' })
+  },
+}
+</script>
+
+<style>
+.page { width: 240px; height: 240px; flex-direction: column; align-items: center; background-color: #1a1a2e; padding: 8px 8px 8px 8px; }
+.title { font-size: 16px; color: #ffffff; text-align: center; margin: 0px 0px 4px 0px; }
+.all-done { font-size: 12px; color: #00d4aa; text-align: center; margin: 0px 0px 2px 0px; }
+.icons-row { width: 200px; height: 24px; flex-direction: row; align-items: center; justify-content: center; margin: 0px 0px 4px 0px; }
+.top-icon { width: 20px; height: 20px; margin: 0px 6px 0px 6px; }
+.goal-scroll { width: 224px; height: 148px; }
+.goal-list { width: 224px; height: 180px; flex-direction: column; }
+.goal-item { width: 214px; height: 34px; margin: 2px 0px 2px 0px; padding: 2px 4px 2px 4px; flex-direction: row; align-items: center; background-color: #16213e; border-radius: 4px; }
+.goal-icon { width: 18px; height: 18px; margin: 0px 4px 0px 0px; }
+.goal-name { width: 28px; font-size: 12px; color: #ffffff; }
+.goal-progress { width: 80px; font-size: 12px; color: #8892b0; }
+.goal-done { width: 16px; font-size: 14px; color: #00d4aa; text-align: center; }
+.goal-btn { width: 38px; height: 22px; border-radius: 4px; background-color: #4ecdc4; color: #1a1a2e; font-size: 10px; }
+.refresh-btn { width: 100px; height: 26px; margin: 4px 0px 0px 0px; border-radius: 13px; background-color: #00d4aa; color: #1a1a2e; font-size: 12px; }
+</style>

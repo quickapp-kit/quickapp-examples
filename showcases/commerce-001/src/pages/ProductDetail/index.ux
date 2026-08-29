@@ -1,12 +1,38 @@
 <template>
   <div class="page detail-page">
-    <image class="hero" src="assets/images/product-main.png" />
-    <text class="title">{{ detailTitle }}</text>
-    <text class="meta">{{ detailMeta }}</text>
-    <text class="price">{{ detailPrice }}</text>
-    <text class="body">精选商品详情已加载，支持真实页面跳转和返回。</text>
-    <input class="action" type="button" value="加入清单" onclick="onAdd" />
-    <input class="back" type="button" value="返回首页" onclick="onBack" />
+    <input class="top-back" type="button" value="返回" onclick="onBack" />
+    <scroll class="detail-scroll">
+      <div class="detail-content">
+        <image class="hero" src="assets/images/product-main.png" />
+        <text class="eyebrow">QUICKAPP MARKET / 精选商品</text>
+        <text class="title">{{ detailTitle }}</text>
+        <text class="meta">{{ detailMeta }}</text>
+        <div class="price-row">
+          <text class="price">{{ detailPrice }}</text>
+          <text class="sale">已售 1.2 万+</text>
+        </div>
+        <text class="tags">本地精选  ·  快速配送  ·  售后保障</text>
+        <div class="info-section">
+          <text class="section-title">配送与服务</text>
+          <text class="section-body">本地体验 · 预计今日送达 · 支持七天无理由</text>
+        </div>
+        <div class="info-section">
+          <text class="section-title">规格</text>
+          <text class="section-body">标准版 / 默认配置</text>
+        </div>
+        <div class="info-section">
+          <text class="section-title">商品说明</text>
+          <text class="section-body">轻量便携，适合桌面、通勤和日常使用。</text>
+        </div>
+        <text if="{{ added }}" class="result success">已加入购物车</text>
+        <text if="{{ purchased }}" class="result purchased">下单状态：演示提交成功</text>
+        <div class="actions">
+          <input class="add" type="button" value="加入购物车" onclick="onAdd" />
+          <input class="buy" type="button" value="立即购买" onclick="onBuy" />
+        </div>
+        <input class="back" type="button" value="返回首页" onclick="onBack" />
+      </div>
+    </scroll>
   </div>
 </template>
 
@@ -19,6 +45,8 @@ export default {
     detailTitle: '晨光便携灯',
     detailMeta: '家居 / 热卖',
     detailPrice: '129 元',
+    added: false,
+    purchased: false,
   },
 
   onInit() {
@@ -102,18 +130,41 @@ export default {
     }
   },
 
-  onAdd() { prompt.showToast({ message: '已加入清单', duration: 0 }) },
+  onAdd() {
+    globalThis.__qak_commerce_cart_item__ = globalThis.__qak_commerce_selection__ || 'lampA'
+    this.added = true
+    prompt.showToast({ message: '已加入购物车', duration: 0 })
+  },
+  onBuy() {
+    this.purchased = true
+    prompt.showToast({ message: '下单状态已更新', duration: 0 })
+  },
   onBack() { router.back() },
 }
 </script>
 
 <style>
-.page { width: 100%; height: 100%; padding: 12px 12px 12px 12px; flex-direction: column; align-items: center; justify-content: center; background-color: #ffffff; }
-.hero { width: 72px; height: 72px; margin: 4px 4px 14px 4px; }
-.title { margin: 4px 4px 8px 4px; font-size: 25px; color: #111111; }
-.meta, .body { margin: 4px 4px 4px 4px; font-size: 15px; color: #555555; }
-.price { margin: 4px 4px 8px 4px; font-size: 22px; color: #d24a3a; }
-.action, .back { width: 220px; height: 40px; margin: 5px 4px 5px 4px; border-radius: 7px; color: #ffffff; }
-.action { background-color: #00a800; }
-.back { background-color: #2774c7; }
+.page { width: 100%; height: 100%; padding: 8px 12px 10px 12px; flex-direction: column; background-color: #ffffff; }
+.top-back { width: 64px; height: 30px; margin: 0 0 4px 0; border-radius: 5px; background-color: #555555; color: #ffffff; }
+.detail-scroll { width: 100%; height: 92%; }
+.detail-content { width: 100%; padding: 4px 0 12px 0; flex-direction: column; align-items: center; }
+.hero { width: 160px; height: 160px; margin: 4px 4px 12px 4px; }
+.eyebrow { margin: 2px 4px 3px 4px; font-size: 11px; color: #2774c7; }
+.title { margin: 2px 4px 4px 4px; font-size: 25px; color: #111111; }
+.meta { margin: 2px 4px 5px 4px; font-size: 14px; color: #555555; }
+.price-row { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+.price { margin: 2px 4px 4px 4px; font-size: 24px; color: #d24a3a; }
+.sale { margin: 2px 4px 4px 4px; font-size: 12px; color: #777777; }
+.tags { width: 100%; margin: 3px 4px 10px 4px; font-size: 12px; color: #39744a; }
+.info-section { width: 100%; margin: 4px 0 3px 0; padding: 9px 10px 8px 10px; flex-direction: column; background-color: #f2f4f5; border-radius: 6px; }
+.section-title { margin: 1px 2px 4px 2px; font-size: 15px; color: #111111; }
+.section-body { margin: 1px 2px 1px 2px; font-size: 12px; color: #555555; }
+.result { width: 100%; margin: 7px 4px 2px 4px; font-size: 13px; }
+.success { color: #00a800; }
+.purchased { color: #2774c7; }
+.actions { width: 100%; margin: 10px 0 4px 0; flex-direction: row; justify-content: space-between; }
+.add, .buy { width: 48%; height: 40px; border-radius: 7px; color: #ffffff; }
+.add { background-color: #e98b28; }
+.buy { background-color: #d24a3a; }
+.back { width: 100%; height: 38px; margin: 5px 0 4px 0; border-radius: 7px; background-color: #2774c7; color: #ffffff; }
 </style>

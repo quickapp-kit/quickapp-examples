@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <text class="title">媒体预览</text>
-    <video class="video" src="https://example.invalid/quickapp-kit/demo.mp4" poster="assets/images/media-poster.png" controls="true" muted="true" autoplay="false" onprepared="onPrepared" onstart="onStart" onpause="onPause" onfinish="onFinish" onerror="onError" ontimeupdate="onTimeUpdate"></video>
+    <video class="video" src="assets/videos/demo.mp4" poster="assets/images/media-poster.png" controls="true" muted="true" autoplay="false" onprepared="onPrepared" onstart="onStart" onpause="onPause" onfinish="onFinish" onerror="onError" ontimeupdate="onTimeUpdate"></video>
     <text class="status">Video contract: src / poster / controls / muted</text>
     <text class="status">Lifecycle: prepared / start / pause / finish</text>
     <text class="status">Clock: timeupdate / error</text>

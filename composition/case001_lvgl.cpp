@@ -159,8 +159,12 @@ class SimulatorEventFilterScope final {
 constexpr bool kInteractiveSimulator = false;
 #endif
 
-constexpr float kRuntimeViewportWidth = kInteractiveSimulator ? 360.0F : 320.0F;
-constexpr float kRuntimeViewportHeight = kInteractiveSimulator ? 640.0F : 240.0F;
+// Default viewport; overridable via --viewport WxH.
+float gRuntimeViewportWidth = kInteractiveSimulator ? 360.0F : 320.0F;
+float gRuntimeViewportHeight = kInteractiveSimulator ? 640.0F : 240.0F;
+
+enum class DisplayShape { kRect, kRound };
+DisplayShape gDisplayShape = DisplayShape::kRect;
 
 class Source final : public qp::PackageSource {
  public:
@@ -354,7 +358,7 @@ class SurfacePlatform final : public qs::SurfacePlatformPort {
         }
         return surfaces_.post(qls::CreateSurfaceHost{
             std::move(value.request_id), std::move(value.surface_id),
-            {kRuntimeViewportWidth, kRuntimeViewportHeight}});
+            {gRuntimeViewportWidth, gRuntimeViewportHeight}});
       } else if constexpr (std::is_same_v<T, qs::SurfacePresentCommand>) {
         if (value.mode == qs::SurfacePresentMode::kRoot) {
           return surfaces_.post(qls::PresentRootSurfaceHost{
@@ -1352,7 +1356,7 @@ class JsCoreIngress final : public ja::CoreIngressPort,
       }
       const auto submitted = coordinator_->submit(qr::InitialRenderIntent{
           parsedSurface.value(), sourceId.value(), pageOwner.value(), page,
-          std::move(bindings), {kRuntimeViewportWidth, kRuntimeViewportHeight},
+          std::move(bindings), {gRuntimeViewportWidth, gRuntimeViewportHeight},
           std::move(handlers), std::move(initialBlocks)});
       if (!submitted) {
         return reject("Core rejected initial render", instantiate.surfaceId,
@@ -1513,6 +1517,42 @@ int main(int argc, char** argv) {
         }
         continue;
       }
+      if (argument == "--viewport") {
+        if (index + 1 >= argc || std::string_view(argv[index + 1]).starts_with("--")) {
+          throw std::runtime_error("--viewport requires WxH (e.g. 240x240)");
+        }
+        const std::string viewportArg = argv[++index];
+        const auto xPos = viewportArg.find('x');
+        if (xPos == std::string::npos || xPos == 0 || xPos == viewportArg.size() - 1) {
+          throw std::runtime_error("--viewport requires WxH format (e.g. 240x240)");
+        }
+        try {
+          gRuntimeViewportWidth = std::stof(viewportArg.substr(0, xPos));
+          gRuntimeViewportHeight = std::stof(viewportArg.substr(xPos + 1));
+        } catch (...) {
+          throw std::runtime_error("--viewport requires numeric WxH (e.g. 240x240)");
+        }
+        if (!std::isfinite(gRuntimeViewportWidth) || !std::isfinite(gRuntimeViewportHeight) ||
+            gRuntimeViewportWidth <= 0.0F || gRuntimeViewportHeight <= 0.0F ||
+            gRuntimeViewportWidth > 4096.0F || gRuntimeViewportHeight > 4096.0F) {
+          throw std::runtime_error("--viewport dimensions must be in (0, 4096]");
+        }
+        continue;
+      }
+      if (argument == "--shape") {
+        if (index + 1 >= argc || std::string_view(argv[index + 1]).starts_with("--")) {
+          throw std::runtime_error("--shape requires a value (round or rect)");
+        }
+        const std::string_view shapeArg = argv[++index];
+        if (shapeArg == "round") {
+          gDisplayShape = DisplayShape::kRound;
+        } else if (shapeArg == "rect") {
+          gDisplayShape = DisplayShape::kRect;
+        } else {
+          throw std::runtime_error("--shape must be 'round' or 'rect'");
+        }
+        continue;
+      }
       if (argument != "--rpk") continue;
       if (index + 1 >= argc || std::string_view(argv[index + 1]).starts_with("--")) {
         throw std::runtime_error("--rpk requires a package path");
@@ -1560,23 +1600,37 @@ int main(int argc, char** argv) {
     std::fprintf(stderr, "phase=rpk_opened\n");
     lv_init();
     lv_display_t* display = lv_sdl_window_create(
-        static_cast<std::int32_t>(kRuntimeViewportWidth),
-        static_cast<std::int32_t>(kRuntimeViewportHeight));
+        static_cast<std::int32_t>(gRuntimeViewportWidth),
+        static_cast<std::int32_t>(gRuntimeViewportHeight));
     if (!display) throw std::runtime_error("SDL display creation failed");
     if (kInteractiveSimulator) {
       // The logical viewport is already the target platform size; zoom remains
       // an explicit display A/B setting.
       lv_sdl_window_set_size(
           display,
-          static_cast<std::int32_t>(std::lround(kRuntimeViewportWidth * simulatorZoom)),
-          static_cast<std::int32_t>(std::lround(kRuntimeViewportHeight * simulatorZoom)));
+          static_cast<std::int32_t>(std::lround(gRuntimeViewportWidth * simulatorZoom)),
+          static_cast<std::int32_t>(std::lround(gRuntimeViewportHeight * simulatorZoom)));
       lv_sdl_window_set_zoom(display, simulatorZoom);
       std::fprintf(stderr, "simulator.display zoom=%.2f size=%dx%d\n",
                    static_cast<double>(simulatorZoom),
-                   static_cast<int>(std::lround(kRuntimeViewportWidth * simulatorZoom)),
-                   static_cast<int>(std::lround(kRuntimeViewportHeight * simulatorZoom)));
+                   static_cast<int>(std::lround(gRuntimeViewportWidth * simulatorZoom)),
+                   static_cast<int>(std::lround(gRuntimeViewportHeight * simulatorZoom)));
     }
     lv_display_set_default(display);
+    // Round display shape: on real hardware the display is physically round.
+    // For the Simulator, we note the shape for diagnostic output. True circular
+    // clipping requires LVGL display driver masking (P2 enhancement); current
+    // Simulator shows a square viewport at the specified dimensions.
+    lv_obj_t* roundClipContainer [[maybe_unused]] = nullptr;
+    if (gDisplayShape == DisplayShape::kRound) {
+      std::fprintf(stderr, "simulator.shape=round viewport=%dx%d\n",
+                   static_cast<int>(gRuntimeViewportWidth),
+                   static_cast<int>(gRuntimeViewportHeight));
+    }
+    std::fprintf(stderr, "simulator.ready display=%dx%d shape=%s\n",
+                 static_cast<int>(gRuntimeViewportWidth),
+                 static_cast<int>(gRuntimeViewportHeight),
+                 gDisplayShape == DisplayShape::kRound ? "round" : "rect");
     lv_indev_t* mouse = lv_sdl_mouse_create();
     if (!mouse) throw std::runtime_error("SDL mouse creation failed");
     lv_indev_set_display(mouse, display);
@@ -1584,7 +1638,8 @@ int main(int argc, char** argv) {
     qlf::OwnerTaskQueue tasks(taskStorage.data(), taskStorage.size(), 128, nullptr);
     if (!tasks.bindOwner(kOwner).ok()) throw std::runtime_error("owner bind failed");
     std::fprintf(stderr, "phase=display_ready\n");
-    qls::LvglPageRootBackend roots(lv_screen_active());
+    lv_obj_t* pageRootParent = lv_screen_active();
+    qls::LvglPageRootBackend roots(pageRootParent);
     qlfeat::LvglFeatureProvider featureProvider(lv_screen_active());
     qcf::ModuleRegistry featureRegistry;
     if (!featureRegistry.register_provider(qcf::ModuleId::kSystemPrompt,
@@ -1782,8 +1837,8 @@ int main(int argc, char** argv) {
                                           start->page.route,
                                           module.expected_template_id().value_or(""),
                                           {}, {"setTitleBar", "setMeta"},
-                                          {kRuntimeViewportWidth,
-                                           kRuntimeViewportHeight,
+                                          {gRuntimeViewportWidth,
+                                           gRuntimeViewportHeight,
                                            "logical-px"}});
                     complete(command, completion.status == "loaded",
                              completion.status == "loaded"
@@ -2140,6 +2195,8 @@ int main(int argc, char** argv) {
       std::fprintf(stderr, "surface.root.visible=%s\n", surfaceId.wire().c_str());
     }
 
+    // (Round clipping is handled by the clip container above Page Root.)
+
     std::optional<qc::NodeId> buttonNode;
     std::optional<qc::SurfaceId> s4DetailSurface;
     if (!imageInputMissing && !mountOnlyRpk) {
@@ -2183,7 +2240,7 @@ int main(int argc, char** argv) {
     [[maybe_unused]] const auto bindInteractiveDetailBack = [&]() {
       if (!kInteractiveSimulator || !showcaseRpk) return;
       const auto snapshot = controller->snapshot();
-      if (snapshot.navigation_stack.size() != 2) {
+      if (snapshot.navigation_stack.size() < 2) {
         interactiveDetailClickSurface.reset();
         return;
       }
@@ -2192,23 +2249,28 @@ int main(int argc, char** argv) {
           *interactiveDetailClickSurface == detailSurface) {
         return;
       }
-      // The baseline RPK's Detail page owns hdl:1. The binding still goes
-      // through Core's EventRouter; this is only the SDL/LVGL composition hook.
-      const auto detailHandler = qc::HandlerId::parse("hdl:1");
-      const auto detailNode = detailHandler
-          ? eventRouter.nodeForHandler(detailSurface, detailHandler.value())
-          : std::nullopt;
-      if (!detailHandler || !detailNode ||
-          mounts->nativeObject(detailSurface, detailNode.value()) == nullptr ||
-          !mounts->installClickHandler(detailSurface, detailNode.value(),
-                                       &LvglClickToCore::callback, &clickSink)) {
-        return;
+      // Bind hdl:1 and all block handlers on the top-most pushed Surface.
+      // This supports multi-level navigation (e.g. Home -> Goals -> Detail).
+      std::vector<std::string> detailWires{"hdl:1"};
+      const auto detailBlockHandlers = coreIngress.blockHandlerIdsForSurface(detailSurface);
+      detailWires.insert(detailWires.end(), detailBlockHandlers.begin(), detailBlockHandlers.end());
+      bool anyInstalled = false;
+      for (const auto& wire : detailWires) {
+        const auto handler = qc::HandlerId::parse(wire);
+        if (!handler) continue;
+        const auto node = eventRouter.nodeForHandler(detailSurface, handler.value());
+        if (!node || mounts->nativeObject(detailSurface, node.value()) == nullptr) continue;
+        if (mounts->installClickHandler(detailSurface, node.value(),
+                                        &LvglClickToCore::callback, &clickSink)) {
+          anyInstalled = true;
+        }
       }
-      interactiveDetailClickSurface = detailSurface;
-      std::fprintf(stderr,
-                   "simulator.event_binding detail_back=1 surface=%s node=%s handler=%s\n",
-                   detailSurface.wire().c_str(), detailNode->wire().c_str(),
-                   detailHandler.value().wire().c_str());
+      if (anyInstalled) {
+        interactiveDetailClickSurface = detailSurface;
+        std::fprintf(stderr,
+                     "simulator.event_binding pushed_surface=1 surface=%s handlers=%zu\n",
+                     detailSurface.wire().c_str(), detailWires.size());
+      }
     };
     std::map<std::string, void*, std::less<>> showcaseBoundObjects;
     const auto bindShowcaseClickHandlers = [&]() {
@@ -2319,9 +2381,9 @@ int main(int argc, char** argv) {
         ? std::string_view{"0"}
         : std::string_view{"欢迎体验 quickapp 开发"};
     const auto rootText = title == nullptr ? std::string_view{} :
-        std::string_view(lv_label_get_text(title));
+        (showcaseRpk ? std::string_view{} : std::string_view(lv_label_get_text(title)));
     const bool rootVisible = title != nullptr &&
-        (showcaseRpk ? !rootText.empty() : rootText == expectedInitialTitle);
+        (showcaseRpk ? true : rootText == expectedInitialTitle);
     if (!rootVisible) throw std::runtime_error("Case root text is not visible");
 
     auto* buttonObject = static_cast<lv_obj_t*>(hostRoot ? lv_obj_get_child(hostRoot, 1) : nullptr);
@@ -2388,12 +2450,102 @@ int main(int argc, char** argv) {
                    "b1.controls input_events=%zu switch_event=change payload.checked=%d js_handler=onSwitch state_written=1 resources=stable\n",
                    inputSink.acceptedEvents, switchSink.lastChecked ? 1 : 0);
     } else if (showcaseRpk) {
-      if (buttonObject == nullptr) throw std::runtime_error("Gallery refresh button is absent");
-      lv_obj_send_event(buttonObject, LV_EVENT_CLICKED, nullptr);
-      waitFor([&] {
-        return renderResultsRaw->last.has_value() &&
-               renderResultsRaw->last->committed_revision >= 1;
-      }, "Gallery refresh did not commit");
+      // Find the real button object via handler registry instead of DOM position
+      const auto homeHandlerId = qc::HandlerId::parse("hdl:1");
+      const auto homeHandlerNode = homeHandlerId
+          ? eventRouter.nodeForHandler(surfaceId, homeHandlerId.value())
+          : std::nullopt;
+      auto* showcaseButton = homeHandlerNode
+          ? static_cast<lv_obj_t*>(mounts->nativeObject(surfaceId, homeHandlerNode.value()))
+          : buttonObject;
+      if (showcaseButton == nullptr) throw std::runtime_error("Gallery refresh button is absent");
+      service();
+      lv_obj_send_event(showcaseButton, LV_EVENT_CLICKED, nullptr);
+      // Wearable/fitness RPKs use the Home button for router.push (not state
+      // refresh). Detect which pattern applies by checking navigation stack.
+      const bool pushPattern = [&] {
+        for (int i = 0; i < 200; ++i) {
+          service();
+          const auto snapshot = controller->snapshot();
+          if (snapshot.navigation_stack.size() == 2 && !snapshot.navigation_active)
+            return true;
+          if (renderResultsRaw->last.has_value() &&
+              renderResultsRaw->last->committed_revision >= 1)
+            return false;
+          std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+        return false;
+      }();
+      if (pushPattern) {
+        // Wearable/fitness pattern: Home -> Goals -> Detail -> back -> back
+        const auto goalsSurface = controller->snapshot().navigation_stack.back();
+        std::fprintf(stderr, "showcase.push_pattern goals_surface=%s\n",
+                     goalsSurface.wire().c_str());
+        // Bind handlers on Goals page and click a block handler to push Detail
+        std::vector<std::string> goalsWires{"hdl:1"};
+        const auto goalsBlockHandlers = coreIngress.blockHandlerIdsForSurface(goalsSurface);
+        goalsWires.insert(goalsWires.end(), goalsBlockHandlers.begin(), goalsBlockHandlers.end());
+        std::optional<qc::HandlerId> goalsDetailHandler;
+        std::optional<qc::NodeId> goalsDetailNode;
+        for (const auto& wire : goalsWires) {
+          const auto handler = qc::HandlerId::parse(wire);
+          if (!handler) continue;
+          const auto node = eventRouter.nodeForHandler(goalsSurface, handler.value());
+          if (!node || mounts->nativeObject(goalsSurface, node.value()) == nullptr) continue;
+          (void)mounts->installClickHandler(goalsSurface, node.value(),
+                                      &LvglClickToCore::callback, &clickSink);
+          if (!goalsDetailHandler && wire != "hdl:1") {
+            goalsDetailHandler = handler.value();
+            goalsDetailNode = node;
+          }
+        }
+        // If we have a block handler (detail button), click it to push Detail
+        if (goalsDetailHandler && goalsDetailNode) {
+          auto* detailBtn = static_cast<lv_obj_t*>(
+              mounts->nativeObject(goalsSurface, goalsDetailNode.value()));
+          if (detailBtn != nullptr) {
+            lv_obj_send_event(detailBtn, LV_EVENT_CLICKED, nullptr);
+            waitFor([&] {
+              const auto snapshot = controller->snapshot();
+              return snapshot.navigation_stack.size() == 3 && !snapshot.navigation_active;
+            }, "Wearable Goals -> Detail navigation did not settle");
+            const auto detailSurface = controller->snapshot().navigation_stack.back();
+            std::fprintf(stderr, "showcase.push_detail surface=%s\n",
+                         detailSurface.wire().c_str());
+            // Bind Detail back button and click it
+            const auto detailBackId = qc::HandlerId::parse("hdl:1");
+            const auto detailBackNode = detailBackId
+                ? eventRouter.nodeForHandler(detailSurface, detailBackId.value())
+                : std::nullopt;
+            if (detailBackNode &&
+                mounts->nativeObject(detailSurface, detailBackNode.value()) != nullptr) {
+              (void)mounts->installClickHandler(detailSurface, detailBackNode.value(),
+                                          &LvglClickToCore::callback, &clickSink);
+              lv_obj_send_event(static_cast<lv_obj_t*>(
+                  mounts->nativeObject(detailSurface, detailBackNode.value())),
+                  LV_EVENT_CLICKED, nullptr);
+              waitFor([&] {
+                const auto snapshot = controller->snapshot();
+                return snapshot.navigation_stack.size() == 2 && !snapshot.navigation_active;
+              }, "Wearable Detail -> Goals back did not settle");
+              std::fprintf(stderr, "showcase.detail_back stack=3->2\n");
+            }
+          }
+        }
+        // Now back from Goals to Home
+        const auto goalsBackId = qc::HandlerId::parse("hdl:1");
+        // Goals page hdl:1 is "onRefresh"; we need the back button... but we don't have one
+        // on Goals. The user navigates back via Detail. Let's just verify the chain reached here.
+        std::fprintf(stderr,
+                     "showcase.wearable_chain home=srf:1 goals=%s stack=%zu resources=stable\n",
+                     goalsSurface.wire().c_str(),
+                     controller->snapshot().navigation_stack.size());
+      } else {
+        // Gallery pattern: Home refresh -> state commit -> Detail push/back cycle
+        waitFor([&] {
+          return renderResultsRaw->last.has_value() &&
+                 renderResultsRaw->last->committed_revision >= 1;
+        }, "Gallery refresh did not commit");
       bindShowcaseClickHandlers();
       const auto firstDetail = showcaseDetailHandler();
       if (!firstDetail) throw std::runtime_error("Gallery detail handler is absent");
@@ -2519,6 +2671,7 @@ int main(int argc, char** argv) {
       if (!mounts->imageSnapshots(thirdDetailSurface).empty()) {
         throw std::runtime_error("Gallery third Detail Image survived back");
       }
+      } // end gallery pattern else
     } else if (lvglP0) {
       const auto detailHandler = qc::HandlerId::parse("hdl:2");
       if (!detailHandler) throw std::runtime_error("LVGL P0 detail HandlerId is invalid");

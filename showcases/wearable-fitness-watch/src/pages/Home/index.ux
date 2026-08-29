@@ -1,0 +1,59 @@
+<template>
+  <div class="page">
+    <div class="ring-outer">
+      <div class="ring-fill">
+        <text class="steps-value">{{ steps }}</text>
+        <text class="steps-label">步</text>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <image class="icon" src="assets/images/heart.png" />
+        <text class="metric-val">{{ heartRate }}</text>
+        <text class="metric-unit">bpm</text>
+      </div>
+      <div class="metric">
+        <image class="icon" src="assets/images/fire.png" />
+        <text class="metric-val">{{ calories }}</text>
+        <text class="metric-unit">kcal</text>
+      </div>
+      <div class="metric">
+        <image class="icon" src="assets/images/steps.png" />
+        <text class="metric-val">{{ distance }}</text>
+        <text class="metric-unit">km</text>
+      </div>
+    </div>
+    <input class="btn" type="button" value="查看目标" onclick="onGoals" />
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: {
+    steps: '6,842',
+    heartRate: '72',
+    calories: '186',
+    distance: '3.2',
+  },
+
+  onGoals() {
+    router.push({ uri: '/pages/Goals' })
+  },
+}
+</script>
+
+<style>
+.page { width: 240px; height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: #1a1a2e; }
+.ring-outer { width: 130px; height: 130px; border-radius: 65px; background-color: #16213e; flex-direction: column; align-items: center; justify-content: center; }
+.ring-fill { width: 110px; height: 110px; border-radius: 55px; background-color: #00d4aa; flex-direction: column; align-items: center; justify-content: center; }
+.steps-value { font-size: 28px; color: #ffffff; text-align: center; }
+.steps-label { font-size: 12px; color: #ffffff; text-align: center; }
+.metrics { width: 220px; height: 44px; margin: 8px 0px 0px 0px; flex-direction: row; align-items: center; justify-content: center; }
+.metric { width: 70px; height: 44px; flex-direction: column; align-items: center; justify-content: center; }
+.icon { width: 16px; height: 16px; }
+.metric-val { font-size: 14px; color: #ffffff; text-align: center; }
+.metric-unit { font-size: 10px; color: #8892b0; text-align: center; }
+.btn { width: 120px; height: 32px; margin: 6px 0px 0px 0px; border-radius: 16px; background-color: #00d4aa; color: #1a1a2e; font-size: 13px; }
+</style>

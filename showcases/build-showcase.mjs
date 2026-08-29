@@ -103,6 +103,27 @@ async function main() {
         bytes: Object.freeze(Array.from(source.bytes)),
       }))
     }
+    let videoEntries = []
+    try {
+      videoEntries = await access.list('src/assets/videos', { maxEntries: 8 })
+    } catch (error) {
+      if (!String(error).includes('Source not found')) throw error
+    }
+    for (const entry of videoEntries) {
+      if (entry.kind !== 'file') continue
+      const resourcePath = entry.logicalPath.replace(/^src\//, '')
+      if (resourcePaths.has(resourcePath)) continue
+      const extension = path.extname(entry.logicalPath).toLowerCase()
+      if (extension !== '.mp4') continue
+      const source = await access.read(entry.logicalPath, { content: 'bytes', maxBytes: 16 * 1024 * 1024 })
+      resourcePaths.add(resourcePath)
+      resources.push(Object.freeze({
+        path: resourcePath,
+        mediaType: 'video/mp4',
+        resourceId: resourcePath,
+        bytes: Object.freeze(Array.from(source.bytes)),
+      }))
+    }
     const artifact = new RuntimeArtifactBuilder().build({
       model: lowered.model,
       manifest: graph.model.manifest,
@@ -148,6 +169,7 @@ async function main() {
       routes: artifact.metadata.pages.map(page => page.manifestRoute),
       imageMembers,
       imageTotalBytes,
+      videoMembers: artifact.metadata.resources.filter(resource => resource.path.startsWith('assets/videos/')),
       deterministicBuild: true,
       requiredRuntimeOperations: ['updateBinding', 'removeBlock', 'moveBlock', 'navigationPush', 'navigationClose'],
       capabilities: graph.model.manifest.raw.features.map(feature => feature.name),

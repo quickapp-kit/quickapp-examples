@@ -1,0 +1,58 @@
+<template>
+  <div class="page">
+    <scroll class="main-scroll">
+      <div class="card steps-card">
+        <image class="card-icon" src="assets/images/steps.png" />
+        <text class="card-value">{{ steps }}</text>
+        <text class="card-label">步</text>
+      </div>
+      <div class="card hr-card">
+        <image class="card-icon" src="assets/images/heart.png" />
+        <text class="card-value">{{ heartRate }}</text>
+        <text class="card-label">bpm</text>
+      </div>
+      <div class="card cal-card">
+        <image class="card-icon" src="assets/images/fire.png" />
+        <text class="card-value">{{ calories }}</text>
+        <text class="card-label">kcal</text>
+      </div>
+      <div class="card dist-card">
+        <image class="card-icon" src="assets/images/water.png" />
+        <text class="card-value">{{ distance }}</text>
+        <text class="card-label">km</text>
+      </div>
+      <input class="btn" type="button" value="查看目标" onclick="onGoals" />
+    </scroll>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+
+export default {
+  private: {
+    steps: '6,842',
+    heartRate: '72',
+    calories: '186',
+    distance: '3.2',
+  },
+
+  onGoals() {
+    router.push({ uri: '/pages/Goals' })
+  },
+}
+</script>
+
+<style>
+.page { width: 194px; height: 368px; flex-direction: column; align-items: center; background-color: #0f0f1a; padding: 16px 12px 16px 12px; }
+.main-scroll { width: 170px; height: 336px; }
+.card { width: 170px; height: 72px; margin: 4px 0px 4px 0px; padding: 8px 8px 8px 8px; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; }
+.steps-card { background-color: #16213e; }
+.hr-card { background-color: #16213e; }
+.cal-card { background-color: #16213e; }
+.dist-card { background-color: #16213e; }
+.card-icon { width: 20px; height: 20px; margin: 0px 0px 2px 0px; }
+.card-value { font-size: 22px; color: #00d4aa; text-align: center; }
+.card-label { font-size: 10px; color: #8892b0; text-align: center; }
+.btn { width: 140px; height: 36px; margin: 8px 0px 0px 0px; border-radius: 18px; background-color: #00d4aa; color: #0f0f1a; font-size: 13px; }
+</style>

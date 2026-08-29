@@ -7,19 +7,34 @@
 
     <scroll class="content-area">
       <div class="content-shell">
-        <div class="home-content">
-          <text if="{{ selectedTab === 0 }}" class="summary">今日推荐 / {{ products.length }} 件好物</text>
-          <input if="{{ selectedTab === 0 }}" class="refresh" type="button" value="切换推荐状态" onclick="onRefresh" />
-          <text if="{{ selectedTab === 0 }}" class="state">{{ refreshState }}</text>
-          <text if="{{ loading }}" class="state">状态更新中</text>
-          <div if="{{ selectedTab === 0 }}" class="featured">
-            <image class="feature-image" src="assets/images/product-main.png" />
-            <image class="feature-image" src="assets/images/product-focus.png" />
-            <image class="feature-image" src="assets/images/product-review.png" />
-            <text class="feature-label">本地精选</text>
-          </div>
-          <div class="product" for="{{ (index, item) in products }}" tid="id">
+        <text if="{{ selectedTab === 0 }}" class="summary">今日推荐 / {{ products.length }} 件好物</text>
+        <div if="{{ selectedTab === 0 }}" class="featured">
+          <image class="feature-image" src="assets/images/product-main.png" />
+          <image class="feature-image" src="assets/images/product-focus.png" />
+          <image class="feature-image" src="assets/images/product-review.png" />
+          <text class="feature-label">本地精选</text>
+        </div>
+        <div class="product-list">
+          <div class="product" for="{{ (index, item) in selectedTab === 0 ? lampProducts : [] }}" tid="id">
             <image class="product-image" src="assets/images/product-main.png" />
+            <div class="product-copy">
+              <text class="product-title">{{ item.title }}</text>
+              <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
+              <text class="product-price">{{ item.price }}</text>
+            </div>
+            <input class="detail" type="button" value="查看详情" onclick="onProduct" />
+          </div>
+          <div class="product" for="{{ (index, item) in selectedTab === 0 ? bagProducts : [] }}" tid="id">
+            <image class="product-image" src="assets/images/product-focus.png" />
+            <div class="product-copy">
+              <text class="product-title">{{ item.title }}</text>
+              <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
+              <text class="product-price">{{ item.price }}</text>
+            </div>
+            <input class="detail" type="button" value="查看详情" onclick="onProduct" />
+          </div>
+          <div class="product" for="{{ (index, item) in selectedTab === 0 ? cupProducts : [] }}" tid="id">
+            <image class="product-image" src="assets/images/product-review.png" />
             <div class="product-copy">
               <text class="product-title">{{ item.title }}</text>
               <text class="product-meta">{{ item.category }} / {{ item.status }}</text>
@@ -29,30 +44,87 @@
           </div>
         </div>
 
-        <div class="panel" if="{{ selectedTab === 1 }}">
-          <text class="panel-title">分类</text>
-          <text class="panel-body">家居 / 出行 / 生活</text>
-          <text class="panel-body">按主题浏览本地精选内容</text>
-          <text class="panel-body">当前分类：全部</text>
+        <div class="panel seed-panel" if="{{ selectedTab === 1 }}">
+          <text class="panel-title">种草</text>
+          <text class="panel-body">本地精选内容 / 两列卡片流</text>
+          <div class="seed-grid">
+            <div class="seed-column">
+              <div class="seed-card seed-tall">
+                <image class="seed-image" src="assets/images/product-focus.png" />
+                <div class="seed-copy">
+                  <text class="seed-title">通勤收纳怎么选</text>
+                  <text class="seed-body">轻量背包，装下工作日常</text>
+                </div>
+              </div>
+              <div class="seed-card seed-short">
+                <image class="seed-image" src="assets/images/product-review.png" />
+                <div class="seed-copy">
+                  <text class="seed-title">随行饮品搭配</text>
+                  <text class="seed-body">保温杯与城市出行</text>
+                </div>
+              </div>
+            </div>
+            <div class="seed-column">
+              <div class="seed-card seed-short">
+                <image class="seed-image" src="assets/images/product-main.png" />
+                <div class="seed-copy">
+                  <text class="seed-title">桌面灯光布置</text>
+                  <text class="seed-body">工作区的暖光方案</text>
+                </div>
+              </div>
+              <div class="seed-card seed-tall">
+                <image class="seed-image" src="assets/images/product-focus.png" />
+                <div class="seed-copy">
+                  <text class="seed-title">周末轻装出发</text>
+                  <text class="seed-body">一只包的短途清单</text>
+                </div>
+              </div>
+            </div>
+          </div>
+          <video class="seed-video" src="assets/videos/seed-demo.mp4" poster="assets/images/product-focus.png" controls="false" muted="true" autoplay="false" onprepared="onVideoPrepared" onstart="onVideoStart" onpause="onVideoPause" onfinish="onVideoFinish" onerror="onVideoError"></video>
+          <text class="panel-note">点击视频播放 / {{ videoState }}</text>
         </div>
 
-        <div class="panel" if="{{ selectedTab === 2 }}">
-          <text class="panel-title">购物车</text>
-          <text class="panel-body">购物车暂存 2 件商品</text>
-          <text class="panel-body">本地体验，不连接网络</text>
-          <text class="panel-body">合计：428 元</text>
+        <text if="{{ selectedTab === 2 }}" class="panel-title">购物车</text>
+        <text if="{{ selectedTab === 2 }}" class="panel-body">{{ cartItems.length }} 件商品 / 本地暂存</text>
+        <text if="{{ selectedTab === 2 && cartItems.length === 0 }}" class="panel-body">购物车为空</text>
+        <div class="cart-list" if="{{ selectedTab === 2 }}">
+          <div class="cart-item">
+            <image class="cart-image" src="assets/images/product-main.png" />
+            <div class="cart-copy">
+              <text class="cart-title">晨光便携灯</text>
+              <text class="cart-price">129 元</text>
+            </div>
+            <input class="cart-detail" type="button" value="详情" onclick="onLampCartProduct" />
+          </div>
+          <div class="cart-item">
+            <image class="cart-image" src="assets/images/product-focus.png" />
+            <div class="cart-copy">
+              <text class="cart-title">城市通勤包</text>
+              <text class="cart-price">299 元</text>
+            </div>
+            <input class="cart-detail" type="button" value="详情" onclick="onBagCartProduct" />
+          </div>
         </div>
+        <text if="{{ selectedTab === 2 }}" class="cart-total">合计：{{ cartTotal }} 元</text>
+        <text if="{{ selectedTab === 2 && paid }}" class="panel-note">支付按钮已点击 / 仅演示</text>
+        <input if="{{ selectedTab === 2 }}" class="pay" type="button" value="去结算（演示）" onclick="onPay" />
 
-        <div class="panel" if="{{ selectedTab === 3 }}">
-          <text class="panel-title">我的</text>
-          <text class="panel-body">QuickApp 用户</text>
-          <text class="panel-body">收藏 3 件 / 浏览 8 次</text>
-          <text class="panel-body">本地体验，不连接网络</text>
+        <text if="{{ selectedTab === 3 }}" class="panel-title">我的</text>
+        <text if="{{ selectedTab === 3 }}" class="panel-body">QuickApp 用户 / 本地账户</text>
+        <text if="{{ selectedTab === 3 }}" class="panel-body">收藏 3 件 / 浏览 8 次</text>
+        <div class="settings-list">
+          <div class="setting" for="{{ (index, item) in selectedTab === 3 ? settings : [] }}" tid="id">
+            <text class="setting-name">{{ item.name }}</text>
+            <text class="setting-value">{{ item.value }}</text>
+            <input class="setting-action" type="button" value="查看" onclick="onSetting" />
+          </div>
         </div>
+        <text if="{{ selectedTab === 3 }}" class="panel-note">{{ settingState }}</text>
       </div>
     </scroll>
 
-    <tabs class="tabs" items="首页|分类|购物车|我的" selected="{{ selectedTab }}" onchange="onTabChange"></tabs>
+    <tabs class="tabs" items="首页|种草|购物车|我的" selected="{{ selectedTab }}" onchange="onTabChange"></tabs>
   </div>
 </template>
 
@@ -63,9 +135,19 @@ import prompt from '@system.prompt'
 export default {
   private: {
     selectedTab: 0,
-    loading: false,
-    refreshState: '推荐状态：稳定',
-    refreshCount: 0,
+    videoState: '等待播放',
+    paid: false,
+    cartTotal: 428,
+    cartItems: [
+      { id: 'cartLamp', title: '晨光便携灯', price: '129 元' },
+      { id: 'cartBag', title: '城市通勤包', price: '299 元' },
+    ],
+    settings: [
+      { id: 'notify', name: '消息通知', value: '已开启' },
+      { id: 'address', name: '收货地址', value: '本地演示地址' },
+      { id: 'service', name: '售后服务', value: '在线帮助' },
+    ],
+    settingState: '设置项可查看',
     products: [
       { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '129 元' },
       { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '299 元' },
@@ -88,49 +170,51 @@ export default {
       { id: 'lampS', title: '阅读工作灯', category: '家居', status: '精选', price: '249 元' },
       { id: 'bagT', title: '短途旅行包', category: '出行', status: '热卖', price: '289 元' },
     ],
+    lampProducts: [
+      { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '129 元' },
+      { id: 'lampD', title: '夜读护眼灯', category: '家居', status: '精选', price: '159 元' },
+      { id: 'lampG', title: '桌面氛围灯', category: '家居', status: '精选', price: '199 元' },
+      { id: 'lampJ', title: '床头阅读灯', category: '家居', status: '上新', price: '179 元' },
+      { id: 'lampM', title: '便携露营灯', category: '家居', status: '上新', price: '219 元' },
+      { id: 'lampP', title: '小夜灯套装', category: '家居', status: '热卖', price: '149 元' },
+      { id: 'lampS', title: '阅读工作灯', category: '家居', status: '精选', price: '249 元' },
+    ],
+    bagProducts: [
+      { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '299 元' },
+      { id: 'bagE', title: '轻便旅行袋', category: '出行', status: '热卖', price: '239 元' },
+      { id: 'bagH', title: '城市双肩包', category: '出行', status: '热卖', price: '329 元' },
+      { id: 'bagK', title: '通勤收纳包', category: '出行', status: '精选', price: '189 元' },
+      { id: 'bagN', title: '周末旅行包', category: '出行', status: '稳定', price: '269 元' },
+      { id: 'bagQ', title: '轻量电脑包', category: '出行', status: '上新', price: '359 元' },
+      { id: 'bagT', title: '短途旅行包', category: '出行', status: '热卖', price: '289 元' },
+    ],
+    cupProducts: [
+      { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '89 元' },
+      { id: 'cupF', title: '随行咖啡杯', category: '生活', status: '上新', price: '79 元' },
+      { id: 'cupI', title: '简约玻璃杯', category: '生活', status: '稳定', price: '59 元' },
+      { id: 'cupL', title: '随手保温杯', category: '生活', status: '热卖', price: '99 元' },
+      { id: 'cupO', title: '轻巧随行杯', category: '生活', status: '精选', price: '69 元' },
+      { id: 'cupR', title: '透明冷水壶', category: '生活', status: '稳定', price: '119 元' },
+    ],
   },
 
   onTabChange(event) {
     if (event && Number.isInteger(event.index)) {
       this.selectedTab = event.index
-      if (event.index === 0) {
-        this.products = [
-          { id: 'lampA', title: '晨光便携灯', category: '家居', status: '热卖', price: '129 元' },
-          { id: 'bagB', title: '城市通勤包', category: '出行', status: '精选', price: '299 元' },
-          { id: 'cupC', title: '轻量保温杯', category: '生活', status: '上新', price: '89 元' },
-          { id: 'lampD', title: '夜读护眼灯', category: '家居', status: '精选', price: '159 元' },
-          { id: 'bagE', title: '轻便旅行袋', category: '出行', status: '热卖', price: '239 元' },
-          { id: 'cupF', title: '随行咖啡杯', category: '生活', status: '上新', price: '79 元' },
-          { id: 'lampG', title: '桌面氛围灯', category: '家居', status: '精选', price: '199 元' },
-          { id: 'bagH', title: '城市双肩包', category: '出行', status: '热卖', price: '329 元' },
-          { id: 'cupI', title: '简约玻璃杯', category: '生活', status: '稳定', price: '59 元' },
-          { id: 'lampJ', title: '床头阅读灯', category: '家居', status: '上新', price: '179 元' },
-          { id: 'bagK', title: '通勤收纳包', category: '出行', status: '精选', price: '189 元' },
-          { id: 'cupL', title: '随手保温杯', category: '生活', status: '热卖', price: '99 元' },
-          { id: 'lampM', title: '便携露营灯', category: '家居', status: '上新', price: '219 元' },
-          { id: 'bagN', title: '周末旅行包', category: '出行', status: '稳定', price: '269 元' },
-          { id: 'cupO', title: '轻巧随行杯', category: '生活', status: '精选', price: '69 元' },
-          { id: 'lampP', title: '小夜灯套装', category: '家居', status: '热卖', price: '149 元' },
-          { id: 'bagQ', title: '轻量电脑包', category: '出行', status: '上新', price: '359 元' },
-          { id: 'cupR', title: '透明冷水壶', category: '生活', status: '稳定', price: '119 元' },
-          { id: 'lampS', title: '阅读工作灯', category: '家居', status: '精选', price: '249 元' },
-          { id: 'bagT', title: '短途旅行包', category: '出行', status: '热卖', price: '289 元' },
-        ]
-      } else {
-        this.products = []
+      if (event.index === 2 && this.cartItems.length === 2 && globalThis.__qak_commerce_cart_item__) {
+        const selected = globalThis.__qak_commerce_cart_item__
+        if (selected === 'bagB') {
+          this.cartItems = this.cartItems.concat([{ id: 'cartAddedBag', title: '城市通勤包', price: '299 元' }])
+          this.cartTotal += 299
+        } else if (selected === 'cupC') {
+          this.cartItems = this.cartItems.concat([{ id: 'cartAddedCup', title: '轻量保温杯', price: '89 元' }])
+          this.cartTotal += 89
+        } else {
+          this.cartItems = this.cartItems.concat([{ id: 'cartAddedLamp', title: '晨光便携灯', price: '129 元' }])
+          this.cartTotal += 129
+        }
       }
     }
-  },
-
-  onRefresh() {
-    this.refreshCount += 1
-    this.loading = !this.loading
-    this.refreshState = this.loading ? '正在更新推荐' : '推荐状态：稳定'
-    if (this.products.length > 1) {
-      const first = this.products[0]
-      this.products = this.products.slice(1).concat([first])
-    }
-    prompt.showToast({ message: '推荐状态已切换', duration: 0 })
   },
 
   onProduct(event) {
@@ -158,6 +242,33 @@ export default {
     prompt.showToast({ message: '打开商品详情', duration: 0 })
     router.push({ uri: '/pages/ProductDetail' })
   },
+
+  onLampCartProduct() {
+    globalThis.__qak_commerce_selection__ = 'lampA'
+    router.push({ uri: '/pages/ProductDetail' })
+  },
+
+  onBagCartProduct() {
+    globalThis.__qak_commerce_selection__ = 'bagB'
+    router.push({ uri: '/pages/ProductDetail' })
+  },
+
+  onPay() {
+    this.paid = true
+    prompt.showToast({ message: '支付按钮已点击（演示）', duration: 0 })
+  },
+
+  onSetting(event) {
+    const handler = String(event && event.handlerId)
+    this.settingState = handler.endsWith('-address') ? '收货地址：本地演示地址' : handler.endsWith('-service') ? '售后服务：在线帮助' : '消息通知：已开启'
+    prompt.showToast({ message: this.settingState, duration: 0 })
+  },
+
+  onVideoPrepared() { this.videoState = '已准备' },
+  onVideoStart() { this.videoState = '播放中' },
+  onVideoPause() { this.videoState = '已暂停' },
+  onVideoFinish() { this.videoState = '播放完成' },
+  onVideoError() { this.videoState = '播放失败' },
 }
 </script>
 
@@ -168,9 +279,8 @@ export default {
 .title { margin: 1px 4px 2px 4px; font-size: 25px; color: #111111; }
 .content-area { width: 100%; height: 70%; }
 .content-shell { width: 100%; flex-direction: column; }
-.summary, .state { margin: 2px 4px 3px 4px; font-size: 13px; color: #555555; }
+.summary { margin: 2px 4px 8px 4px; font-size: 13px; color: #555555; }
 .home-content { width: 100%; flex-direction: column; }
-.refresh { width: 132px; height: 28px; margin: 2px 4px 3px 4px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
 .featured { width: 100%; height: 44px; margin: 2px 0 3px 0; flex-direction: row; align-items: center; background-color: #f7f8f8; }
 .feature-image { width: 28px; height: 28px; margin: 3px 4px 3px 4px; }
 .feature-label { margin-left: 4px; font-size: 12px; color: #555555; }
@@ -182,6 +292,31 @@ export default {
 .product-price { color: #d24a3a; }
 .detail { width: 68px; height: 32px; margin-left: 4px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
 .panel { width: 100%; height: 150px; margin: 12px 0 4px 0; padding: 18px 12px 12px 12px; flex-direction: column; background-color: #f2f4f5; border-radius: 7px; }
+.seed-panel { height: 470px; }
+.seed-grid { width: 100%; flex-direction: row; align-items: flex-start; justify-content: space-between; }
+.seed-column { width: 48%; flex-direction: column; }
+.seed-card { width: 100%; margin: 4px 0 3px 0; padding: 5px; flex-direction: column; align-items: center; background-color: #ffffff; border-radius: 6px; }
+.seed-tall { height: 98px; }
+.seed-short { height: 78px; }
+.seed-image { width: 48px; height: 48px; margin: 2px 8px 2px 2px; }
+.seed-copy, .cart-copy { flex-direction: column; }
+.seed-title, .cart-title { font-size: 14px; color: #111111; }
+.seed-body, .panel-note { margin-top: 3px; font-size: 11px; color: #777777; }
+.seed-video { width: 100%; height: 150px; margin: 8px 0 4px 0; background-color: #20252b; border-radius: 6px; }
+.cart-list { width: 100%; height: 140px; flex-direction: column; }
+.cart-panel { width: 100%; height: 300px; margin: 12px 0 4px 0; padding: 18px 12px 12px 12px; flex-direction: column; background-color: #f2f4f5; border-radius: 7px; }
+.cart-item { width: 100%; height: 58px; margin: 4px 0 3px 0; padding: 5px; flex-direction: row; align-items: center; background-color: #ffffff; border-radius: 6px; }
+.cart-image { width: 42px; height: 42px; margin: 2px 8px 2px 2px; }
+.cart-copy { width: 52%; }
+.cart-price { margin-top: 3px; font-size: 12px; color: #d24a3a; }
+.cart-detail { width: 52px; height: 28px; border-radius: 5px; background-color: #2774c7; color: #ffffff; }
+.cart-total { margin: 8px 2px 5px 2px; font-size: 17px; color: #d24a3a; }
+.pay { width: 150px; height: 34px; margin: 4px 2px 2px 2px; border-radius: 6px; background-color: #d24a3a; color: #ffffff; }
+.me-panel { width: 100%; height: 300px; margin: 12px 0 4px 0; padding: 18px 12px 12px 12px; flex-direction: column; background-color: #f2f4f5; border-radius: 7px; }
+.setting { width: 100%; height: 42px; margin: 3px 0 3px 0; padding: 4px 5px; flex-direction: row; align-items: center; background-color: #ffffff; border-radius: 5px; }
+.setting-name { width: 40%; font-size: 13px; color: #111111; }
+.setting-value { width: 38%; font-size: 11px; color: #777777; }
+.setting-action { width: 48px; height: 26px; border-radius: 4px; background-color: #2774c7; color: #ffffff; }
 .panel-title { margin: 2px 2px 10px 2px; font-size: 20px; color: #111111; }
 .panel-body { margin: 3px 2px 3px 2px; font-size: 14px; color: #555555; }
 .tabs { width: 100%; height: 48px; background-color: #2774c7; color: #ffffff; border-radius: 6px; }
