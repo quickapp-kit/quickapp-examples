@@ -1,6 +1,6 @@
-# Wearable Fitness Watch
+# Sport Watch
 
-圆形手表（240x240）运动健康快应用 Showcase。
+圆形手表（240x240）运动健康快应用 Showcase（原 `wearable-fitness-watch`）。
 
 ## 功能
 
@@ -11,12 +11,12 @@
 ## 构建
 
 ```bash
-node scripts/build-watch.mjs
+node scripts/build-sport-watch.mjs
 ```
 
 ## 运行
 
 ```bash
 SDL_VIDEODRIVER=dummy ./build-m1-s2/quickapp_case001_lvgl \
-  --rpk showcases/wearable-fitness-watch/dist/wearable-fitness-watch.rpk
+  --rpk showcases/sport-watch/dist/sport-watch.rpk
 ```

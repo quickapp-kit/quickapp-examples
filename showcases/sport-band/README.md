@@ -1,6 +1,6 @@
-# Wearable Fitness Band
+# Sport Band
 
-椭圆手环（194x368）运动健康快应用 Showcase。
+椭圆手环（194x368）运动健康快应用 Showcase（原 `wearable-fitness-band`）。
 
 ## 功能
 
@@ -11,12 +11,12 @@
 ## 构建
 
 ```bash
-node scripts/build-band.mjs
+node scripts/build-sport-band.mjs
 ```
 
 ## 运行
 
 ```bash
 SDL_VIDEODRIVER=dummy ./build-m1-s2/quickapp_case001_lvgl \
-  --rpk showcases/wearable-fitness-band/dist/wearable-fitness-band.rpk
+  --rpk showcases/sport-band/dist/sport-band.rpk
 ```

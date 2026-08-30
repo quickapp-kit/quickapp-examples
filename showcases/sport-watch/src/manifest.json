@@ -1,6 +1,6 @@
 {
-  "package": "com.quickappkit.wearable.fitness.watch",
-  "name": "Wearable Fitness Watch",
+  "package": "com.quickappkit.sport.watch",
+  "name": "QuickApp Kit Sport Watch",
   "versionName": "1.0.0",
   "versionCode": 1,
   "minPlatformVersion": 1070,

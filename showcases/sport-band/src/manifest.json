@@ -1,6 +1,6 @@
 {
-  "package": "com.quickappkit.wearable.fitness.band",
-  "name": "Wearable Fitness Band",
+  "package": "com.quickappkit.sport.band",
+  "name": "QuickApp Kit Sport Band",
   "versionName": "1.0.0",
   "versionCode": 1,
   "minPlatformVersion": 1070,

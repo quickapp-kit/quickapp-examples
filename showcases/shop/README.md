@@ -1,7 +1,7 @@
-# Commerce-001
+# Shop
 
-Commerce-001 is the Android/iOS C-end showcase baseline. It is intentionally
-a product-shaped QuickApp, not a full commerce implementation.
+Shop is the Android/iOS C-end showcase baseline (formerly `commerce-001`). It is
+intentionally a product-shaped QuickApp, not a full commerce implementation.
 
 ## Coverage
 
@@ -31,10 +31,10 @@ access.
 ## Build
 
 ```text
-node scripts/build-commerce.mjs
+node scripts/build-shop.mjs
 ```
 
-The result is `dist/commerce-001.rpk` and metadata in `dist/commerce-001.json`.
+The result is `dist/shop.rpk` and metadata in `dist/shop.json`.
 
 The RPK contains only the Home and ProductDetail routes. The four primary
 sections are state-driven content on Home; they do not create four parallel
