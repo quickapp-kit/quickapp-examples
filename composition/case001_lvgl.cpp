@@ -37,6 +37,9 @@
 #include "quickapp/js/alpha/alpha_page_initialization_stage.h"
 #include "quickapp/js/binding/alpha_initial_binding_stage.h"
 #include "quickapp/js/engine/js_engine_service.h"
+#if defined(QUICKAPP_EXAMPLES_USE_LIBUV_JS_BACKEND)
+#include "quickapp/js/engine/libuv_event_loop_backend.h"
+#endif
 #include "quickapp/js/engine/observation.h"
 #include "quickapp/js/engine/quickjs_engine_provider.h"
 #include "quickapp/js/event/handler_registry.h"
@@ -1731,9 +1734,15 @@ int main(int argc, char** argv) {
     engineConfig.limits.maxPendingTasks = 32;
     const char* appRuntimeId = binding001 ? "app:binding001" : (case002 ? "app:case002" : (block001 ? "app:block001" : (lvglP0 ? "app:lvgl-p0" : "app:case001")));
     const char* observationName = binding001 ? "binding001-lvgl" : (case002 ? "case002-lvgl" : (block001 ? "block001-lvgl" : (lvglP0 ? "lvgl-p0" : "case001-lvgl")));
+    std::unique_ptr<qj::EventLoopBackend> jsBackend;
+#if defined(QUICKAPP_EXAMPLES_USE_LIBUV_JS_BACKEND)
+    jsBackend = std::make_unique<qj::LibuvEventLoopBackend>(
+        engineConfig.limits.maxPendingTasks);
+#endif
     qj::JsEngineService engine(appRuntimeId, std::move(provider), engineConfig,
                                clock, std::move(registration).value(),
-                               {false, observationName, "steady", 0});
+                               {false, observationName, "steady", 0},
+                               std::move(jsBackend));
     std::promise<qj::ServiceResult> started;
     auto startedFuture = started.get_future();
     if (!engine.start([&](qj::ServiceResult result) {

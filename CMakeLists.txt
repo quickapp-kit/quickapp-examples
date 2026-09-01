@@ -10,6 +10,7 @@ set(QUICKAPP_LVGL_BUILD_S03 ON CACHE BOOL "" FORCE)
 set(QUICKAPP_LVGL_BUILD_S04 ON CACHE BOOL "" FORCE)
 set(QUICKAPP_LVGL_BUILD_S06 ON CACHE BOOL "" FORCE)
 set(QUICKAPP_LVGL_BUILD_SIMULATOR ON CACHE BOOL "" FORCE)
+set(QUICKAPP_JS_BUILD_LIBUV_BACKEND ON CACHE BOOL "" FORCE)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl" "${CMAKE_CURRENT_BINARY_DIR}/quickapp-runtime-lvgl" EXCLUDE_FROM_ALL)
@@ -76,8 +77,59 @@ target_link_libraries(quickapp_lvgl_simulator PRIVATE
   quickapp_js_event
   quickapp_js_alpha_page_stage
   quickapp_lvgl_mount_host quickapp_lvgl_feature_provider quickapp_lvgl_font_measure
-  quickapp_lvgl_sdl_backends lvgl::lvgl PkgConfig::SDL3)
+  quickapp_lvgl_sdl_backends quickapp_js_event_loop_libuv
+  lvgl::lvgl PkgConfig::SDL3)
 target_compile_definitions(quickapp_lvgl_simulator PRIVATE
   CONFIG_LV_USE_SDL=1
   CONFIG_LV_SDL_DIRECT_EXIT=0
+  QUICKAPP_EXAMPLES_INTERACTIVE_SIMULATOR=1
+  QUICKAPP_EXAMPLES_USE_LIBUV_JS_BACKEND=1)
+
+add_executable(quickapp_lvgl_simulator_js_executor composition/case001_lvgl.cpp)
+target_compile_features(quickapp_lvgl_simulator_js_executor PRIVATE cxx_std_20)
+target_compile_options(quickapp_lvgl_simulator_js_executor PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_include_directories(quickapp_lvgl_simulator_js_executor PRIVATE
+  "${QUICKAPP_CORE_DIR}/include"
+  "${QUICKAPP_JS_DIR}/include"
+  "${QUICKAPP_JS_DIR}/providers/quickjs/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl")
+target_link_libraries(quickapp_lvgl_simulator_js_executor PRIVATE
+  quickapp_core_package quickapp_core_render quickapp_core_features
+  quickapp_js_engine_quickjs quickapp_js_engine_api quickapp_js_executor
+  quickapp_js_module_loader quickapp_js_static_facades quickapp_js_page_host_control
+  quickapp_js_vm_lifecycle quickapp_js_alpha_initial_binding quickapp_js_alpha_initial_render
+  quickapp_js_event quickapp_js_alpha_page_stage
+  quickapp_lvgl_mount_host quickapp_lvgl_feature_provider quickapp_lvgl_font_measure
+  quickapp_lvgl_sdl_backends lvgl::lvgl PkgConfig::SDL3)
+target_compile_definitions(quickapp_lvgl_simulator_js_executor PRIVATE
+  CONFIG_LV_USE_SDL=1
+  CONFIG_LV_SDL_DIRECT_EXIT=0
   QUICKAPP_EXAMPLES_INTERACTIVE_SIMULATOR=1)
+
+add_executable(quickapp_case001_lvgl_libuv composition/case001_lvgl.cpp)
+target_compile_features(quickapp_case001_lvgl_libuv PRIVATE cxx_std_20)
+target_compile_options(quickapp_case001_lvgl_libuv PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_include_directories(quickapp_case001_lvgl_libuv PRIVATE
+  "${QUICKAPP_CORE_DIR}/include"
+  "${QUICKAPP_JS_DIR}/include"
+  "${QUICKAPP_JS_DIR}/providers/quickjs/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../source/third_party/lvgl/include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../quickapp-runtime-lvgl")
+target_link_libraries(quickapp_case001_lvgl_libuv PRIVATE
+  quickapp_core_package quickapp_core_render quickapp_core_features
+  quickapp_js_engine_quickjs quickapp_js_engine_api quickapp_js_executor
+  quickapp_js_module_loader quickapp_js_static_facades quickapp_js_page_host_control
+  quickapp_js_vm_lifecycle quickapp_js_alpha_initial_binding quickapp_js_alpha_initial_render
+  quickapp_js_event quickapp_js_alpha_page_stage
+  quickapp_lvgl_mount_host quickapp_lvgl_feature_provider quickapp_lvgl_font_measure
+  quickapp_lvgl_sdl_backends quickapp_js_event_loop_libuv
+  lvgl::lvgl PkgConfig::SDL3)
+target_compile_definitions(quickapp_case001_lvgl_libuv PRIVATE
+  CONFIG_LV_USE_SDL=1
+  CONFIG_LV_SDL_DIRECT_EXIT=0
+  QUICKAPP_EXAMPLES_USE_LIBUV_JS_BACKEND=1)
