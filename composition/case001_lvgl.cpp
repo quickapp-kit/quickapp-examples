@@ -1617,12 +1617,14 @@ int main(int argc, char** argv) {
                    static_cast<int>(std::lround(gRuntimeViewportHeight * simulatorZoom)));
     }
     lv_display_set_default(display);
-    // Round display shape: on real hardware the display is physically round.
-    // For the Simulator, we note the shape for diagnostic output. True circular
-    // clipping requires LVGL display driver masking (P2 enhancement); current
-    // Simulator shows a square viewport at the specified dimensions.
-    lv_obj_t* roundClipContainer [[maybe_unused]] = nullptr;
+    // Apply the physical display mask at the Simulator display boundary. Page
+    // roots remain ordinary Runtime-owned children of the active screen.
     if (gDisplayShape == DisplayShape::kRound) {
+      auto* screen = lv_screen_active();
+      lv_obj_set_style_bg_color(screen, lv_color_black(), 0);
+      lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, 0);
+      lv_obj_set_style_radius(screen, LV_RADIUS_CIRCLE, 0);
+      lv_obj_set_style_clip_corner(screen, true, 0);
       std::fprintf(stderr, "simulator.shape=round viewport=%dx%d\n",
                    static_cast<int>(gRuntimeViewportWidth),
                    static_cast<int>(gRuntimeViewportHeight));
@@ -2194,8 +2196,6 @@ int main(int argc, char** argv) {
       rpkMounted = true;
       std::fprintf(stderr, "surface.root.visible=%s\n", surfaceId.wire().c_str());
     }
-
-    // (Round clipping is handled by the clip container above Page Root.)
 
     std::optional<qc::NodeId> buttonNode;
     std::optional<qc::SurfaceId> s4DetailSurface;

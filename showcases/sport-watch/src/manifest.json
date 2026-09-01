@@ -6,8 +6,7 @@
   "minPlatformVersion": 1070,
   "icon": "/assets/images/target.png",
   "features": [
-    { "name": "system.router" },
-    { "name": "system.prompt" }
+    { "name": "system.router" }
   ],
   "router": {
     "entry": "pages/Home",

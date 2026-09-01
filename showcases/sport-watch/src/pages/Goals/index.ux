@@ -54,18 +54,18 @@ export default {
 </script>
 
 <style>
-.page { width: 240px; height: 240px; flex-direction: column; align-items: center; background-color: #1a1a2e; padding: 8px 8px 8px 8px; }
-.title { font-size: 16px; color: #ffffff; text-align: center; margin: 0px 0px 4px 0px; }
+.page { width: 240px; height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: #1a1a2e; }
+.title { font-size: 16px; color: #ffffff; text-align: center; margin: 0px 0px 2px 0px; }
 .all-done { font-size: 12px; color: #00d4aa; text-align: center; margin: 0px 0px 2px 0px; }
-.icons-row { width: 200px; height: 24px; flex-direction: row; align-items: center; justify-content: center; margin: 0px 0px 4px 0px; }
-.top-icon { width: 20px; height: 20px; margin: 0px 6px 0px 6px; }
-.goal-scroll { width: 224px; height: 148px; }
-.goal-list { width: 224px; height: 180px; flex-direction: column; }
-.goal-item { width: 214px; height: 34px; margin: 2px 0px 2px 0px; padding: 2px 4px 2px 4px; flex-direction: row; align-items: center; background-color: #16213e; border-radius: 4px; }
-.goal-icon { width: 18px; height: 18px; margin: 0px 4px 0px 0px; }
-.goal-name { width: 28px; font-size: 12px; color: #ffffff; }
-.goal-progress { width: 80px; font-size: 12px; color: #8892b0; }
-.goal-done { width: 16px; font-size: 14px; color: #00d4aa; text-align: center; }
-.goal-btn { width: 38px; height: 22px; border-radius: 4px; background-color: #4ecdc4; color: #1a1a2e; font-size: 10px; }
-.refresh-btn { width: 100px; height: 26px; margin: 4px 0px 0px 0px; border-radius: 13px; background-color: #00d4aa; color: #1a1a2e; font-size: 12px; }
+.icons-row { width: 152px; height: 20px; flex-direction: row; align-items: center; justify-content: center; margin: 0px 0px 3px 0px; }
+.top-icon { width: 16px; height: 16px; margin: 0px 5px 0px 5px; }
+.goal-scroll { width: 184px; height: 140px; }
+.goal-list { width: 184px; height: 160px; flex-direction: column; align-items: center; }
+.goal-item { width: 180px; height: 34px; margin: 2px 0px 2px 0px; padding: 2px 3px 2px 3px; flex-direction: row; align-items: center; background-color: #16213e; border-radius: 6px; }
+.goal-icon { width: 16px; height: 16px; margin: 0px 3px 0px 0px; }
+.goal-name { width: 28px; font-size: 11px; color: #ffffff; }
+.goal-progress { width: 66px; font-size: 10px; color: #8892b0; }
+.goal-done { width: 12px; font-size: 12px; color: #00d4aa; text-align: center; }
+.goal-btn { width: 38px; height: 22px; border-radius: 11px; background-color: #4ecdc4; color: #1a1a2e; font-size: 10px; }
+.refresh-btn { width: 92px; height: 26px; margin: 3px 0px 0px 0px; border-radius: 13px; background-color: #00d4aa; color: #1a1a2e; font-size: 12px; }
 </style>
