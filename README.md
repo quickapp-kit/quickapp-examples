@@ -9,7 +9,7 @@ Example apps and integration demos for [QuickApp Kit](https://github.com/quickap
 | `composition/` | C++ composition examples — package loading, JS execution, LVGL rendering |
 | `binding-001/` | Data binding example (JS ↔ Native) |
 | `baselines/` | Baseline test cases for correctness validation |
-| `quickapp-code-test1/` | Sample quick-app project (UX source) |
+| `alliance-hap-case001/` | Alliance HAP reference sample (UX source, read-only baseline) |
 | `quickapp-code-test2/` | Another sample quick-app project |
 
 ## Build (C++ examples)
@@ -30,7 +30,7 @@ cmake --build build
 ## Quick-app sample projects
 
 ```bash
-cd quickapp-code-test1
+cd alliance-hap-case001
 npm install
 # Use quickapp-toolkit CLI to build/run
 ```

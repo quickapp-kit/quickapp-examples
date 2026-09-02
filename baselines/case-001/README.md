@@ -9,7 +9,7 @@
 
 ## 结论
 
-本目录是 `CASE-001@1` 的机器可读事实基线，固定 Source/Reference identity、来源状态、使用矩阵和平台无关场景；`quickapp-code-test1` 保持只读。
+本目录是 `CASE-001@1` 的机器可读事实基线，固定 Alliance HAP Source/Reference identity、来源状态、使用矩阵和平台无关场景；`alliance-hap-case001` 保持只读。
 
 ## 内容
 

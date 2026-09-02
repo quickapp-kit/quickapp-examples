@@ -39,5 +39,5 @@ The expected path is:
 Home -> state/if/keyed for -> Detail -> router.back() -> Home -> teardown
 ```
 
-Focused regression fixtures remain in the sibling `quickapp-code-test1` through
+Focused regression fixtures remain in the sibling `alliance-hap-case001` through
 `quickapp-code-test4` directories and are not replaced by this application.

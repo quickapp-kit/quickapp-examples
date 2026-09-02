@@ -3,7 +3,7 @@
   "caseId": "CASE-001",
   "caseVersion": 1,
   "classification": "local alliance template snapshot",
-  "localPath": "quickapp-code-test1",
+  "localPath": "alliance-hap-case001",
   "identity": {
     "package": "com.example.case1",
     "versionName": "1.0.0",
@@ -11,9 +11,9 @@
     "sourceSnapshotSha256": "aa99ea04873aa3fa22a006b37dada4608b06d903fed90370b117074a3834e78a"
   },
   "verifiedEvidence": [
-    { "fact": "The local README identifies the project as a quick application sample template with Demo, DemoDetail and CardDemo.", "path": "quickapp-code-test1/README.md" },
-    { "fact": "The Manifest identifies package com.example.case1 and entry pages/Demo.", "path": "quickapp-code-test1/src/manifest.json" },
-    { "fact": "Reference package metadata identifies quickapp-ide Toolkit 2.1.0.", "path": "quickapp-code-test1/dist/debug/META-INF/build.txt" }
+    { "fact": "The local README identifies the project as a quick application sample template with Demo, DemoDetail and CardDemo.", "path": "alliance-hap-case001/README.md" },
+    { "fact": "The Manifest identifies package com.example.case1 and entry pages/Demo.", "path": "alliance-hap-case001/src/manifest.json" },
+    { "fact": "Reference package metadata identifies quickapp-ide Toolkit 2.1.0.", "path": "alliance-hap-case001/dist/debug/META-INF/build.txt" }
   ],
   "unknownOrigin": {
     "upstreamRepositoryUrl": { "status": "[待验证]", "value": null },

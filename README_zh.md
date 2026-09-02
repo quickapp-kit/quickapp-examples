@@ -9,7 +9,7 @@
 | `composition/` | C++ 组合示例 — 包加载、JS 执行、LVGL 渲染 |
 | `binding-001/` | 数据绑定示例（JS ↔ Native） |
 | `baselines/` | 正确性验证基线用例 |
-| `quickapp-code-test1/` | 快应用示例工程（UX 源码） |
+| `alliance-hap-case001/` | 联盟 HAP 范例（UX 源码，只读基线） |
 | `quickapp-code-test2/` | 另一个快应用示例工程 |
 
 ## 构建（C++ 示例）
@@ -30,7 +30,7 @@ cmake --build build
 ## 快应用示例项目
 
 ```bash
-cd quickapp-code-test1
+cd alliance-hap-case001
 npm install
 # 使用 quickapp-toolkit CLI 构建/运行
 ```

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "caseId": "CASE-001",
   "caseVersion": 1,
-  "projectRoot": "quickapp-code-test1",
+  "projectRoot": "alliance-hap-case001",
   "snapshotAlgorithm": "Sort UTF-8 relative paths by byte order; for each file append '<lowercase-sha256>  <relative-path>\\n'; SHA-256 the complete UTF-8 manifest.",
   "snapshotSha256": "aa99ea04873aa3fa22a006b37dada4608b06d903fed90370b117074a3834e78a",
   "files": [

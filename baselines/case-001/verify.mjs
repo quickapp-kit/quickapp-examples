@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 const baselineDir = dirname(fileURLToPath(import.meta.url))
 const examplesDir = resolve(baselineDir, '../..')
-const projectDir = resolve(examplesDir, 'quickapp-code-test1')
+const projectDir = resolve(examplesDir, 'alliance-hap-case001')
 
 const comparePath = (left, right) => (left < right ? -1 : left > right ? 1 : 0)
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
