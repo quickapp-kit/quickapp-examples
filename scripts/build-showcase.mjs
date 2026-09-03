@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { Ajv2020 } from '../../quickapp-toolkit/node_modules/ajv/dist/2020.js'
 import { CancellationController } from '../../quickapp-toolkit/dist/application/cancellation.js'
 import { RuntimeArtifactBuilder } from '../../quickapp-toolkit/dist/compiler/artifact/runtime-artifact-builder.js'
+import { ArtifactPaths } from '../../quickapp-toolkit/dist/compiler/artifact-paths.js'
 import { JsModuleEmitter } from '../../quickapp-toolkit/dist/compiler/emitter/js-module-emitter.js'
 import { PageIrEmitter } from '../../quickapp-toolkit/dist/compiler/emitter/page-ir-emitter.js'
 import { CanonicalLowerer } from '../../quickapp-toolkit/dist/compiler/lowering/canonical-lowerer.js'
@@ -142,7 +143,7 @@ async function main() {
       resources: Object.freeze(resources),
       toolkitVersion: '0.1.0',
       buildMode: 'debug',
-      ...(framework === undefined ? {} : { framework: { moduleId: framework.moduleId, path: 'framework/_quickapp-kit_framework-v1.js', content: frameworkContent, sha256: framework.sha256 } }),
+      ...(framework === undefined ? {} : { framework: { moduleId: framework.moduleId, path: ArtifactPaths.frameworkBundle(framework.moduleId), content: frameworkContent, sha256: framework.sha256 } }),
       schemaValidator: validators.artifact,
       cancellation: cancellation(),
     })

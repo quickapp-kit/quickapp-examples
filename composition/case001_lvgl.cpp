@@ -1588,6 +1588,8 @@ int main(int argc, char** argv) {
     if (!loader->open([&](auto result) { if (result) package = std::move(result).value(); else failure = result.error().message; })) throw std::runtime_error("RPK open enqueue failed");
     if (!package || !failure.empty()) throw std::runtime_error("RPK open failed: " + failure);
     const bool gallery001 = package->package_id() == "com.quickappkit.gallery001";
+    [[maybe_unused]] const bool cardWallet =
+        package->package_id() == "com.quickappkit.cardwallet";
     const bool controls001 = package->package_id() == "com.quickappkit.controls001";
     const bool controls002 = package->package_id() == "com.quickappkit.controls002";
     const bool list001 = package->package_id() == "com.quickappkit.list001";
@@ -2074,6 +2076,7 @@ int main(int argc, char** argv) {
             for (const auto moduleId : binding001
                                           ? std::initializer_list<std::string_view>{}
                                           : std::initializer_list<std::string_view>{
+                                                "@quickapp-kit/framework-v1",
                                                 "@quickapp-kit/shared/helper/utils",
                                                 "@quickapp-kit/shared/helper/ajax",
                                                 "@quickapp-kit/shared/helper/apis/example",
@@ -2260,7 +2263,7 @@ int main(int argc, char** argv) {
       }
       // Bind hdl:1 and all block handlers on the top-most pushed Surface.
       // This supports multi-level navigation (e.g. Home -> Goals -> Detail).
-      std::vector<std::string> detailWires{"hdl:1"};
+      std::vector<std::string> detailWires{"hdl:1", "hdl:2"};
       const auto detailBlockHandlers = coreIngress.blockHandlerIdsForSurface(detailSurface);
       detailWires.insert(detailWires.end(), detailBlockHandlers.begin(), detailBlockHandlers.end());
       bool anyInstalled = false;
@@ -2284,7 +2287,7 @@ int main(int argc, char** argv) {
     std::map<std::string, void*, std::less<>> showcaseBoundObjects;
     const auto bindShowcaseClickHandlers = [&]() {
       if (!showcaseRpk || controls001) return;
-      std::vector<std::string> handlerWires{"hdl:1"};
+      std::vector<std::string> handlerWires{"hdl:1", "hdl:2"};
       const auto blockHandlers = coreIngress.blockHandlerIdsForSurface(surfaceId);
       handlerWires.insert(handlerWires.end(), blockHandlers.begin(), blockHandlers.end());
       std::size_t installed = 0;
@@ -2308,6 +2311,14 @@ int main(int argc, char** argv) {
     };
     [[maybe_unused]] const auto showcaseDetailHandler = [&]()
         -> std::optional<std::pair<qc::HandlerId, qc::NodeId>> {
+      const auto pageHandler = qc::HandlerId::parse("hdl:2");
+      const auto pageNode = pageHandler
+          ? eventRouter.nodeForHandler(surfaceId, pageHandler.value())
+          : std::nullopt;
+      if (pageHandler && pageNode &&
+          mounts->nativeObject(surfaceId, pageNode.value()) != nullptr) {
+        return std::make_pair(pageHandler.value(), pageNode.value());
+      }
       for (const auto& handlerWire :
            coreIngress.blockHandlerIdsForSurface(surfaceId)) {
         const auto handler = qc::HandlerId::parse(handlerWire);
@@ -2467,12 +2478,13 @@ int main(int argc, char** argv) {
       auto* showcaseButton = homeHandlerNode
           ? static_cast<lv_obj_t*>(mounts->nativeObject(surfaceId, homeHandlerNode.value()))
           : buttonObject;
-      if (showcaseButton == nullptr) throw std::runtime_error("Gallery refresh button is absent");
-      service();
-      lv_obj_send_event(showcaseButton, LV_EVENT_CLICKED, nullptr);
+      if (!cardWallet && showcaseButton == nullptr)
+        throw std::runtime_error("Gallery refresh button is absent");
       // Wearable/fitness RPKs use the Home button for router.push (not state
       // refresh). Detect which pattern applies by checking navigation stack.
-      const bool pushPattern = [&] {
+      const bool pushPattern = cardWallet ? false : [&] {
+        service();
+        lv_obj_send_event(showcaseButton, LV_EVENT_CLICKED, nullptr);
         for (int i = 0; i < 200; ++i) {
           service();
           const auto snapshot = controller->snapshot();
@@ -2551,10 +2563,12 @@ int main(int argc, char** argv) {
                      controller->snapshot().navigation_stack.size());
       } else {
         // Gallery pattern: Home refresh -> state commit -> Detail push/back cycle
-        waitFor([&] {
-          return renderResultsRaw->last.has_value() &&
-                 renderResultsRaw->last->committed_revision >= 1;
-        }, "Gallery refresh did not commit");
+        if (!cardWallet) {
+          waitFor([&] {
+            return renderResultsRaw->last.has_value() &&
+                   renderResultsRaw->last->committed_revision >= 1;
+          }, "Gallery refresh did not commit");
+        }
       bindShowcaseClickHandlers();
       const auto firstDetail = showcaseDetailHandler();
       if (!firstDetail) throw std::runtime_error("Gallery detail handler is absent");
@@ -2577,7 +2591,8 @@ int main(int argc, char** argv) {
           !firstImages.front().has_descriptor || firstImages.front().pixel_bytes == 0) {
         throw std::runtime_error("Gallery first Detail Image snapshot is incomplete");
       }
-      const auto detailBackHandler = qc::HandlerId::parse("hdl:1");
+      const auto detailBackHandler = qc::HandlerId::parse(
+          cardWallet ? "hdl:2" : "hdl:1");
       const auto detailBackNode = detailBackHandler
           ? eventRouter.nodeForHandler(detailSurface, detailBackHandler.value())
           : std::nullopt;
@@ -2615,7 +2630,8 @@ int main(int argc, char** argv) {
           !secondImages.front().has_descriptor || secondImages.front().pixel_bytes == 0) {
         throw std::runtime_error("Gallery second Detail Image snapshot is incomplete");
       }
-      const auto secondBackHandler = qc::HandlerId::parse("hdl:1");
+      const auto secondBackHandler = qc::HandlerId::parse(
+          cardWallet ? "hdl:2" : "hdl:1");
       const auto secondBackNode = secondBackHandler
           ? eventRouter.nodeForHandler(secondDetailSurface, secondBackHandler.value())
           : std::nullopt;
@@ -2659,7 +2675,8 @@ int main(int argc, char** argv) {
                    "showcase.chain cycles=3 image_mounts=3 surfaces=%s,%s,%s\n",
                    detailSurface.wire().c_str(), secondDetailSurface.wire().c_str(),
                    thirdDetailSurface.wire().c_str());
-      const auto thirdBackHandler = qc::HandlerId::parse("hdl:1");
+      const auto thirdBackHandler = qc::HandlerId::parse(
+          cardWallet ? "hdl:2" : "hdl:1");
       const auto thirdBackNode = thirdBackHandler
           ? eventRouter.nodeForHandler(thirdDetailSurface, thirdBackHandler.value())
           : std::nullopt;
