@@ -8,7 +8,8 @@ Example apps and integration demos for [QuickApp Kit](https://github.com/quickap
 |-----------|-------------|
 | `composition/` | C++ composition examples — package loading, JS execution, LVGL rendering |
 | `binding-001/` | Data binding example (JS ↔ Native) |
-| `baselines/` | Baseline test cases for correctness validation |
+| `baseline-cases/` | Narrow technical RPK baselines for contract validation |
+| `showcases/` | User-facing product scenario RPKs |
 | `alliance-hap-case001/` | Alliance HAP reference sample (UX source, read-only baseline) |
 | `quickapp-code-test2/` | Another sample quick-app project |
 

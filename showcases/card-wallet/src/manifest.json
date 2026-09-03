@@ -1,0 +1,25 @@
+{
+  "package": "com.quickappkit.cardwallet",
+  "name": "QuickApp Kit Card Wallet",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "icon": "/assets/images/card-door.png",
+  "features": [
+    { "name": "system.router" },
+    { "name": "system.prompt" }
+  ],
+  "router": {
+    "entry": "pages/Home",
+    "pages": {
+      "pages/Home": { "component": "index" },
+      "pages/Detail": { "component": "index" }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/Home": { "titleBarText": "卡包" },
+      "pages/Detail": { "titleBarText": "卡片详情" }
+    }
+  }
+}

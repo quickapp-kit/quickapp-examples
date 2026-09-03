@@ -1,0 +1,25 @@
+{
+  "package": "com.quickappkit.inspectionboard",
+  "name": "QuickApp Kit Inspection Board",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1070,
+  "icon": "/assets/images/inspection.png",
+  "features": [
+    { "name": "system.router" },
+    { "name": "system.prompt" }
+  ],
+  "router": {
+    "entry": "pages/Home",
+    "pages": {
+      "pages/Home": { "component": "index" },
+      "pages/Detail": { "component": "index" }
+    }
+  },
+  "display": {
+    "pages": {
+      "pages/Home": { "titleBarText": "设备巡检" },
+      "pages/Detail": { "titleBarText": "任务详情" }
+    }
+  }
+}
