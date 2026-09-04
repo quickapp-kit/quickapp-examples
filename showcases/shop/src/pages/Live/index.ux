@@ -32,7 +32,7 @@ export default {
 
 <style>
 .page { width: 300px; height: 560px; padding: 12px 12px 8px 12px; flex-direction: column; align-items: center; background-color: #ffffff; }
-.title { margin: 12px 4px 4px 4px; font-size: 26px; color: #111111; }
+.title { margin: 4px 4px 2px 4px; font-size: 26px; color: #111111; }
 .summary, .meta, .state { margin: 4px 4px 4px 4px; font-size: 14px; color: #555555; }
 .live-card { width: 260px; height: 96px; margin: 18px 4px 8px 4px; padding: 8px; flex-direction: row; align-items: center; background-color: #f2f4f5; border-radius: 7px; }
 .image { width: 48px; height: 48px; margin: 4px 10px 4px 4px; }
