@@ -12,7 +12,7 @@
     <div class="tabs">
       <input class="tab" type="button" value="首页" onclick="onHome" />
       <input class="tab active" type="button" value="直播" onclick="onLive" />
-      <input class="tab" type="button" value="AI Agent" onclick="onAgent" />
+      <input class="tab" type="button" value="智能助手" onclick="onAgent" />
       <input class="tab" type="button" value="我的" onclick="onMe" />
     </div>
   </div>

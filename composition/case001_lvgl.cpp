@@ -77,6 +77,41 @@ namespace {
 
 constexpr qlf::OwnerToken kOwner{1};
 
+std::optional<qc::RuntimeValue> toCoreRuntimeValue(const qj::RuntimeValue& value) {
+  const auto& storage = value.storage();
+  if (std::holds_alternative<std::nullptr_t>(storage)) return qc::RuntimeValue::null();
+  if (const auto* boolean = std::get_if<bool>(&storage))
+    return qc::RuntimeValue::boolean(*boolean);
+  if (const auto* number = std::get_if<double>(&storage)) {
+    auto converted = qc::RuntimeValue::finite_number(*number);
+    return converted ? std::optional<qc::RuntimeValue>(converted.value()) : std::nullopt;
+  }
+  if (const auto* string = std::get_if<std::string>(&storage)) {
+    auto converted = qc::RuntimeValue::utf8_string(*string);
+    return converted ? std::optional<qc::RuntimeValue>(converted.value()) : std::nullopt;
+  }
+  if (const auto* array = std::get_if<qj::RuntimeValue::Array>(&storage)) {
+    qc::RuntimeValue::Array converted;
+    converted.reserve(array->size());
+    for (const auto& item : *array) {
+      auto child = toCoreRuntimeValue(item);
+      if (!child) return std::nullopt;
+      converted.push_back(std::move(*child));
+    }
+    auto result = qc::RuntimeValue::array(std::move(converted));
+    return result ? std::optional<qc::RuntimeValue>(result.value()) : std::nullopt;
+  }
+  const auto& object = std::get<qj::RuntimeValue::Object>(storage);
+  qc::RuntimeValue::Object converted;
+  for (const auto& [key, item] : object) {
+    auto child = toCoreRuntimeValue(item);
+    if (!child) return std::nullopt;
+    converted.emplace(key, std::move(*child));
+  }
+  auto result = qc::RuntimeValue::object(std::move(converted));
+  return result ? std::optional<qc::RuntimeValue>(result.value()) : std::nullopt;
+}
+
 [[noreturn]] void simulatorTerminateHandler() noexcept {
   std::fprintf(stderr, "case001_lvgl_terminate\n");
   if (auto exception = std::current_exception()) {
@@ -1225,9 +1260,38 @@ class JsCoreIngress final : public ja::CoreIngressPort,
             return reject("invalid navigation push", navigation->sourceSurfaceId,
                           navigation->requestId);
           }
+          qc::RuntimeValue::Object params;
+          for (const auto& [key, value] : navigation->params) {
+            auto converted = toCoreRuntimeValue(value);
+            if (!converted) {
+              return reject("invalid navigation params", navigation->sourceSurfaceId,
+                            navigation->requestId);
+            }
+            params.emplace(key, std::move(*converted));
+          }
+          const auto paramsValue = qc::RuntimeValue::object(std::move(params));
+          if (!paramsValue) {
+            return reject("invalid navigation params", navigation->sourceSurfaceId,
+                          navigation->requestId);
+          }
+          const auto* paramsObject = std::get_if<std::shared_ptr<const qc::RuntimeValue::Object>>(
+              &paramsValue.value().storage());
+          if (paramsObject == nullptr || !*paramsObject) {
+            return reject("invalid navigation params", navigation->sourceSurfaceId,
+                          navigation->requestId);
+          }
+          std::string goalParam;
+          const auto goal = (*paramsObject)->find("goal");
+          if (goal != (*paramsObject)->end()) {
+            const auto* goalValue = std::get_if<std::string>(&goal->second.storage());
+            if (goalValue != nullptr) goalParam = *goalValue;
+          }
+          std::fprintf(stderr, "core.navigation.params request=%s goal=%s count=%zu\n",
+                       navigation->requestId.c_str(), goalParam.c_str(),
+                       (*paramsObject)->size());
           const auto accepted = surfaceController_->enqueue(qs::SurfaceRequest(
               qs::NavigationPushRequest{requestId.value(), source.value(),
-                                        navigation->uri}));
+                                        navigation->uri, **paramsObject}));
           if (!accepted) {
             return reject("Core rejected navigation push",
                           navigation->sourceSurfaceId, navigation->requestId);
@@ -1846,10 +1910,24 @@ int main(int argc, char** argv) {
                     message.expectedHandlerIds = module.expected_handler_ids();
                     modules->onLoadVerifiedModule(message);
                     coreIngress.bindPage(start->surface_id, start->page.page_ir);
+                    qj::RuntimeValue::Object pageParams;
+                    for (const auto& [key, value] : start->params)
+                      pageParams.emplace(key, toJsRuntimeValue(value));
+                    std::string pageGoalParam;
+                    const auto pageGoal = start->params.find("goal");
+                    if (pageGoal != start->params.end()) {
+                      const auto* goalValue = std::get_if<std::string>(
+                          &pageGoal->second.storage());
+                      if (goalValue != nullptr) pageGoalParam = *goalValue;
+                    }
+                    std::fprintf(stderr,
+                                 "core.page.context_params surface=%s goal=%s count=%zu\n",
+                                 start->surface_id.wire().c_str(), pageGoalParam.c_str(),
+                                 start->params.size());
                     vm->onSurfaceContext({start->surface_id.wire(), package->package_id(),
                                           start->page.route,
                                           module.expected_template_id().value_or(""),
-                                          {}, {"setTitleBar", "setMeta"},
+                                          std::move(pageParams), {"setTitleBar", "setMeta"},
                                           {gRuntimeViewportWidth,
                                            gRuntimeViewportHeight,
                                            "logical-px"}});
@@ -2263,7 +2341,10 @@ int main(int argc, char** argv) {
       }
       // Bind hdl:1 and all block handlers on the top-most pushed Surface.
       // This supports multi-level navigation (e.g. Home -> Goals -> Detail).
-      std::vector<std::string> detailWires{"hdl:1", "hdl:2"};
+      std::vector<std::string> detailWires;
+      for (std::size_t handlerIndex = 1; handlerIndex <= 64; ++handlerIndex) {
+        detailWires.push_back("hdl:" + std::to_string(handlerIndex));
+      }
       const auto detailBlockHandlers = coreIngress.blockHandlerIdsForSurface(detailSurface);
       detailWires.insert(detailWires.end(), detailBlockHandlers.begin(), detailBlockHandlers.end());
       bool anyInstalled = false;

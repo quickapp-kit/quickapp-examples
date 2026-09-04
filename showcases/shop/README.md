@@ -1,4 +1,4 @@
-# Shop
+# 好物精选
 
 Shop is the Android/iOS C-end showcase baseline (formerly `commerce-001`). It is
 intentionally a product-shaped QuickApp, not a full commerce implementation.

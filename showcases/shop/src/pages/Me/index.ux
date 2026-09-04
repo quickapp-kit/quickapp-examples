@@ -1,14 +1,14 @@
 <template>
   <div class="page">
     <text class="title">我的</text>
-    <text class="profile">QuickApp 用户</text>
+    <text class="profile">体验用户</text>
     <text class="summary">收藏 3 / 足迹 8 / 优惠 2</text>
     <text if="{{ signedIn }}" class="state">本地体验状态正常</text>
     <input class="action" type="button" value="回到首页" onclick="onHome" />
     <div class="tabs">
       <input class="tab" type="button" value="首页" onclick="onHome" />
       <input class="tab" type="button" value="直播" onclick="onLive" />
-      <input class="tab" type="button" value="AI Agent" onclick="onAgent" />
+      <input class="tab" type="button" value="智能助手" onclick="onAgent" />
       <input class="tab active" type="button" value="我的" onclick="onMe" />
     </div>
   </div>

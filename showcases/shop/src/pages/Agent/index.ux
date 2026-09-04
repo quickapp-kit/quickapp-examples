@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <text class="title">AI Agent</text>
+    <text class="title">智能助手</text>
     <image class="image" src="assets/images/product-focus.png" />
     <text class="summary">你的智能购物助手</text>
     <text if="{{ ready }}" class="state">助手入口已准备</text>
@@ -9,7 +9,7 @@
     <div class="tabs">
       <input class="tab" type="button" value="首页" onclick="onHome" />
       <input class="tab" type="button" value="直播" onclick="onLive" />
-      <input class="tab active" type="button" value="AI Agent" onclick="onAgent" />
+      <input class="tab active" type="button" value="智能助手" onclick="onAgent" />
       <input class="tab" type="button" value="我的" onclick="onMe" />
     </div>
   </div>

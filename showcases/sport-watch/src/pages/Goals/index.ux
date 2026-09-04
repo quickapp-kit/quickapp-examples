@@ -2,20 +2,27 @@
   <div class="page">
     <text class="title">今日目标</text>
     <text if="{{ allDone }}" class="all-done">全部完成</text>
-    <div class="icons-row">
-      <image class="top-icon" src="assets/images/steps.png" />
-      <image class="top-icon" src="assets/images/heart.png" />
-      <image class="top-icon" src="assets/images/fire.png" />
-      <image class="top-icon" src="assets/images/water.png" />
-    </div>
     <scroll class="goal-scroll">
       <list class="goal-list">
-        <div class="goal-item" for="{{ (index, item) in goals }}" tid="id">
-          <image class="goal-icon" src="assets/images/target.png" />
-          <text class="goal-name">{{ item.name }}</text>
-          <text class="goal-progress">{{ item.current }}/{{ item.target }}</text>
-          <text class="goal-done">{{ item.done ? '✓' : '' }}</text>
-          <input class="goal-btn" type="button" value="详情" onclick="onDetail" />
+        <div class="goal-item">
+          <image class="goal-icon" src="assets/images/goal-square.png" />
+          <text class="goal-name">步行</text><text class="goal-progress">6842/10000</text>
+          <input class="goal-btn steps-btn" type="button" value="详情" onclick="onStepsDetail" />
+        </div>
+        <div class="goal-item">
+          <image class="goal-icon" src="assets/images/goal-circle.png" />
+          <text class="goal-name">消耗</text><text class="goal-progress">186/300</text>
+          <input class="goal-btn calories-btn" type="button" value="详情" onclick="onCaloriesDetail" />
+        </div>
+        <div class="goal-item">
+          <image class="goal-icon" src="assets/images/goal-triangle.png" />
+          <text class="goal-name">站立</text><text class="goal-progress">5/8</text>
+          <input class="goal-btn stand-btn" type="button" value="详情" onclick="onStandDetail" />
+        </div>
+        <div class="goal-item">
+          <image class="goal-icon" src="assets/images/goal-diamond.png" />
+          <text class="goal-name">饮水</text><text class="goal-progress">6/8</text>
+          <input class="goal-btn water-btn" type="button" value="详情" onclick="onWaterDetail" />
         </div>
       </list>
     </scroll>
@@ -29,26 +36,18 @@ import router from '@system.router'
 export default {
   private: {
     allDone: false,
-    goals: [
-      { id: 'steps', name: '步行', current: '6842', target: '10000', done: false },
-      { id: 'calories', name: '消耗', current: '186', target: '300', done: false },
-      { id: 'stand', name: '站立', current: '5', target: '8', done: false },
-      { id: 'water', name: '饮水', current: '6', target: '8', done: false },
-    ],
   },
 
   onBack() {
     router.back()
   },
 
-  onDetail(event) {
-    const handler = String(event && event.handlerId)
-    let selected = 'steps'
-    if (handler.includes('calories')) selected = 'calories'
-    else if (handler.includes('stand')) selected = 'stand'
-    else if (handler.includes('water')) selected = 'water'
-    globalThis.__qak_fitness_selection__ = selected
-    router.push({ uri: '/pages/Detail' })
+  onStepsDetail() { this.openDetail('steps') },
+  onCaloriesDetail() { this.openDetail('calories') },
+  onStandDetail() { this.openDetail('stand') },
+  onWaterDetail() { this.openDetail('water') },
+  openDetail(selected) {
+    router.push({ uri: '/pages/Detail', params: { goal: selected } })
   },
 }
 </script>
@@ -57,15 +56,21 @@ export default {
 .page { width: 240px; height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: #1a1a2e; }
 .title { font-size: 16px; color: #ffffff; text-align: center; margin: 0px 0px 2px 0px; }
 .all-done { font-size: 12px; color: #00d4aa; text-align: center; margin: 0px 0px 2px 0px; }
-.icons-row { width: 152px; height: 20px; flex-direction: row; align-items: center; justify-content: center; margin: 0px 0px 3px 0px; }
-.top-icon { width: 16px; height: 16px; margin: 0px 5px 0px 5px; }
 .goal-scroll { width: 184px; height: 140px; }
 .goal-list { width: 184px; height: 160px; flex-direction: column; align-items: center; }
 .goal-item { width: 180px; height: 34px; margin: 2px 0px 2px 0px; padding: 2px 3px 2px 3px; flex-direction: row; align-items: center; background-color: #16213e; border-radius: 6px; }
-.goal-icon { width: 16px; height: 16px; margin: 0px 3px 0px 0px; }
+.goal-icon { width: 20px; height: 20px; margin: 0px 3px 0px 0px; text-align: center; font-size: 19px; }
+.goal-icon.square { background-color: #00d4aa; }
+.goal-icon.circle { color: #ff6670; }
+.goal-icon.triangle { color: #ffe66d; }
+.goal-icon.diamond { color: #4ecdc4; }
 .goal-name { width: 28px; font-size: 11px; color: #ffffff; }
 .goal-progress { width: 66px; font-size: 10px; color: #8892b0; }
 .goal-done { width: 12px; font-size: 12px; color: #00d4aa; text-align: center; }
 .goal-btn { width: 38px; height: 22px; border-radius: 11px; background-color: #4ecdc4; color: #1a1a2e; font-size: 10px; }
+.steps-btn { background-color: #00d4aa; }
+.calories-btn { background-color: #ff6670; }
+.stand-btn { background-color: #ffe66d; }
+.water-btn { background-color: #4ecdc4; }
 .refresh-btn { width: 92px; height: 26px; margin: 3px 0px 0px 0px; border-radius: 13px; background-color: #00d4aa; color: #1a1a2e; font-size: 12px; }
 </style>

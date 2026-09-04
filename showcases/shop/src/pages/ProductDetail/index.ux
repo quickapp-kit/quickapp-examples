@@ -4,7 +4,6 @@
     <scroll class="detail-scroll">
       <div class="detail-content">
         <image class="hero" src="assets/images/product-main.png" />
-        <text class="eyebrow">QUICKAPP MARKET / 精选商品</text>
         <text class="title">{{ detailTitle }}</text>
         <text class="meta">{{ detailMeta }}</text>
         <div class="price-row">
@@ -149,7 +148,6 @@ export default {
 .detail-scroll { width: 100%; height: 92%; }
 .detail-content { width: 100%; padding: 4px 0 12px 0; flex-direction: column; align-items: center; }
 .hero { width: 160px; height: 160px; margin: 4px 4px 12px 4px; }
-.eyebrow { margin: 2px 4px 3px 4px; font-size: 11px; color: #2774c7; }
 .title { margin: 2px 4px 4px 4px; font-size: 25px; color: #111111; }
 .meta { margin: 2px 4px 5px 4px; font-size: 14px; color: #555555; }
 .price-row { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }

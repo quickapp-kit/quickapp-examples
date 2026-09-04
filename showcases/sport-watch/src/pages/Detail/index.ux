@@ -1,10 +1,23 @@
 <template>
   <div class="page">
-    <image class="detail-icon" src="assets/images/target.png" />
+    <image if="{{ goal === 'steps' }}" class="detail-icon" src="assets/images/goal-square.png" />
+    <image if="{{ goal === 'calories' }}" class="detail-icon" src="assets/images/goal-circle.png" />
+    <image if="{{ goal === 'stand' }}" class="detail-icon" src="assets/images/goal-triangle.png" />
+    <image if="{{ goal === 'water' }}" class="detail-icon" src="assets/images/goal-diamond.png" />
+    <div if="{{ goal === 'steps' }}" class="detail-accent steps-accent"></div>
+    <div if="{{ goal === 'calories' }}" class="detail-accent calories-accent"></div>
+    <div if="{{ goal === 'stand' }}" class="detail-accent stand-accent"></div>
+    <div if="{{ goal === 'water' }}" class="detail-accent water-accent"></div>
     <text class="detail-name">{{ goalName }}</text>
-    <text class="detail-value">{{ currentValue }}</text>
+    <text if="{{ goal === 'steps' }}" class="detail-value steps-value">{{ currentValue }}</text>
+    <text if="{{ goal === 'calories' }}" class="detail-value calories-value">{{ currentValue }}</text>
+    <text if="{{ goal === 'stand' }}" class="detail-value stand-value">{{ currentValue }}</text>
+    <text if="{{ goal === 'water' }}" class="detail-value water-value">{{ currentValue }}</text>
     <text class="detail-desc">{{ progressText }}</text>
-    <input class="back-btn" type="button" value="返回" onclick="onBack" />
+    <input if="{{ goal === 'steps' }}" class="back-btn steps-back" type="button" value="返回" onclick="onBack" />
+    <input if="{{ goal === 'calories' }}" class="back-btn calories-back" type="button" value="返回" onclick="onBack" />
+    <input if="{{ goal === 'stand' }}" class="back-btn stand-back" type="button" value="返回" onclick="onBack" />
+    <input if="{{ goal === 'water' }}" class="back-btn water-back" type="button" value="返回" onclick="onBack" />
   </div>
 </template>
 
@@ -16,10 +29,12 @@ export default {
     goalName: '步行',
     currentValue: '6842 步',
     progressText: '距目标还差 3158 步',
+    goal: 'steps',
   },
 
-  onInit() {
-    const selected = globalThis.__qak_fitness_selection__
+  onInit(context) {
+    const selected = context && context.params && context.params.goal
+    if (selected === 'calories' || selected === 'stand' || selected === 'water') this.goal = selected
     if (selected === 'calories') {
       this.goalName = '消耗'
       this.currentValue = '186 kcal'
@@ -44,8 +59,21 @@ export default {
 <style>
 .page { width: 240px; height: 240px; flex-direction: column; align-items: center; justify-content: center; background-color: #1a1a2e; padding: 24px 30px 24px 30px; }
 .detail-icon { width: 30px; height: 30px; margin: 0px 0px 6px 0px; }
+.detail-accent { width: 132px; height: 6px; margin: 0px 0px 7px 0px; border-radius: 3px; }
+.steps-accent { background-color: #00d4aa; }
+.calories-accent { background-color: #ff6670; }
+.stand-accent { background-color: #ffe66d; }
+.water-accent { background-color: #4ecdc4; }
 .detail-name { font-size: 18px; color: #ffffff; text-align: center; margin: 0px 0px 4px 0px; }
-.detail-value { width: 160px; font-size: 26px; color: #00d4aa; text-align: center; margin: 0px 0px 5px 0px; }
+.detail-value { width: 160px; font-size: 26px; text-align: center; margin: 0px 0px 5px 0px; }
+.steps-value { color: #00d4aa; }
+.calories-value { color: #ff6670; }
+.stand-value { color: #ffe66d; }
+.water-value { color: #4ecdc4; }
 .detail-desc { width: 160px; font-size: 12px; color: #8892b0; text-align: center; margin: 0px 0px 8px 0px; }
-.back-btn { width: 92px; height: 30px; border-radius: 15px; background-color: #4ecdc4; color: #1a1a2e; font-size: 13px; }
+.back-btn { width: 92px; height: 30px; border-radius: 15px; color: #1a1a2e; font-size: 13px; }
+.steps-back { background-color: #00d4aa; }
+.calories-back { background-color: #ff6670; }
+.stand-back { background-color: #ffe66d; }
+.water-back { background-color: #4ecdc4; }
 </style>

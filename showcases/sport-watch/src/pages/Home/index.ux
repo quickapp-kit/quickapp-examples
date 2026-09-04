@@ -8,17 +8,17 @@
     </div>
     <div class="metrics">
       <div class="metric">
-        <image class="icon" src="assets/images/heart.png" />
+        <image class="icon" src="assets/images/goal-circle.png" />
         <text class="metric-val">{{ heartRate }}</text>
         <text class="metric-unit">bpm</text>
       </div>
       <div class="metric">
-        <image class="icon" src="assets/images/fire.png" />
+        <image class="icon" src="assets/images/goal-triangle.png" />
         <text class="metric-val">{{ calories }}</text>
         <text class="metric-unit">kcal</text>
       </div>
       <div class="metric">
-        <image class="icon" src="assets/images/steps.png" />
+        <image class="icon" src="assets/images/goal-diamond.png" />
         <text class="metric-val">{{ distance }}</text>
         <text class="metric-unit">km</text>
       </div>
@@ -50,9 +50,9 @@ export default {
 .ring-fill { width: 94px; height: 94px; border-radius: 47px; background-color: #00d4aa; flex-direction: column; align-items: center; justify-content: center; }
 .steps-value { font-size: 26px; color: #ffffff; text-align: center; }
 .steps-label { font-size: 12px; color: #ffffff; text-align: center; }
-.metrics { width: 180px; height: 44px; margin: 6px 0px 0px 0px; flex-direction: row; align-items: center; justify-content: center; }
-.metric { width: 58px; height: 44px; flex-direction: column; align-items: center; justify-content: center; }
-.icon { width: 16px; height: 16px; }
+.metrics { width: 180px; height: 48px; margin: 4px 0px 0px 0px; flex-direction: row; align-items: center; justify-content: center; }
+.metric { width: 58px; height: 48px; flex-direction: column; align-items: center; justify-content: center; }
+.icon { width: 16px; height: 16px; margin: 0px 0px 2px 0px; }
 .metric-val { font-size: 14px; color: #ffffff; text-align: center; }
 .metric-unit { font-size: 10px; color: #8892b0; text-align: center; }
 .btn { width: 112px; height: 30px; margin: 4px 0px 0px 0px; border-radius: 15px; background-color: #00d4aa; color: #1a1a2e; font-size: 13px; }
